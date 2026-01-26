@@ -28,6 +28,11 @@
   // cart: { itemId: qty }
   const cart = {};
 
+  function show(msg) {
+    if (TG && typeof TG.show === "function") TG.show(msg);
+    else console.log(msg);
+  }
+
   function findItem(itemId) {
     for (const c of MENU) {
       for (const it of c.items) {
@@ -141,7 +146,11 @@
     const ids = Object.keys(cart);
 
     if (ids.length === 0) {
-      cartItemsEl.innerHTML = `<div class="menu-item"><div class="menu-title">Корзина пустая</div><div class="menu-desc">Добавь позиции из меню</div></div>`;
+      cartItemsEl.innerHTML = `
+        <div class="menu-item">
+          <div class="menu-title">Корзина пустая</div>
+          <div class="menu-desc">Добавь позиции из меню</div>
+        </div>`;
       totalPriceEl.textContent = "0";
       return;
     }
@@ -228,24 +237,25 @@
     const payload = buildPayload();
     const err = validate(payload);
     if (err) {
-      alert(err);
+      show(err);
       return;
     }
 
-   if (!TG || typeof TG.sendOrder !== "function") {
-  alert("❌ Ошибка: telegram.js не подключён или Mini App открыт не в Telegram.");
-  console.log("payload:", payload);
-  return;
-}
-TG.sendOrder(payload);
+    show("⏳ Отправляю заказ...");
 
+    if (!TG || typeof TG.sendOrder !== "function") {
+      show("❌ Ошибка: telegram.js не подключился (SPALNIK_TG не найден).");
+      console.log("payload:", payload);
+      return;
+    }
 
-    // очистка корзины после отправки
+    TG.sendOrder(payload);
+
+    // очищаем корзину
     for (const k of Object.keys(cart)) delete cart[k];
 
-    // очистка полей
+    // очищаем комментарий, телефон/время оставляем
     commentInput.value = "";
-    // phone и time оставим (обычно удобно не вводить заново)
 
     updateAll();
     renderCart();
