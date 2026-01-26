@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Спальник — Меню</title>
+
+  <!-- Telegram WebApp -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- Верхняя панель -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">СПАЛЬНИК</div>
+      <div class="subtitle">Меню и предзаказ</div>
+    </div>
+
+    <!-- Иконка корзины -->
+    <button id="cartButton" class="cart-button">
+      🧺 <span id="cartCount">0</span>
+    </button>
+  </header>
+
+  <!-- Категории -->
+  <div id="categories" class="categories"></div>
+
+  <!-- Меню -->
+  <main id="menu" class="menu"></main>
+
+  <!-- КОРЗИНА -->
+  <div id="cartScreen" class="cart hidden">
+    <div class="cart-header">
+      <button id="closeCart" class="back-btn">← Назад</button>
+      <h2>Корзина</h2>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-form">
+      <label>
+        Телефон для подтверждения *
+        <input id="phoneInput" type="text" placeholder="+7..." />
+      </label>
+
+      <label>
+        К какому времени приготовить *
+        <input id="timeInput" type="text" placeholder="Например 19:30" />
+      </label>
+
+      <label>
+        Комментарий (необязательно)
+        <input id="commentInput" type="text" placeholder="Без лука" />
+      </label>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        Итого: <span id="totalPrice">0</span> ₽
+      </div>
+      <button id="sendOrder" class="send-order">
+        Отправить предзаказ
+      </button>
+    </div>
+  </div>
+
+  <!-- Скрипты -->
+  <script src="menu.js"></script>
+  <script src="cart.js"></script>
+  <script src="telegram.js"></script>
+</body>
+</html>
