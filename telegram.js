@@ -1,21 +1,30 @@
 // telegram.js
-// Мост между Mini App и Telegram Bot через WebApp.sendData()
+// Отправка заказа из Mini App в бота через Telegram.WebApp.sendData()
 
 (function () {
-  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 
   function isInsideTelegram() {
     return !!tg;
   }
 
   function sendOrder(payload) {
-    const json = JSON.stringify(payload);
+    // На всякий случай убедимся, что payload сериализуется
+    let json = "";
+    try {
+      json = JSON.stringify(payload);
+    } catch (e) {
+      alert("❌ Ошибка: не удалось сформировать данные заказа.");
+      console.error(e);
+      return;
+    }
 
-    // Если открыто НЕ внутри Telegram — показываем сообщение (для теста в браузере)
+    // Если открыто в браузере — Telegram API нет
     if (!isInsideTelegram()) {
       alert(
-        "⚠️ Mini App открыт НЕ в Telegram.\n\n" +
-          "Открой мини-апп через кнопку в боте — только тогда заказ уйдёт в Telegram."
+        "⚠️ Мини-апп открыт НЕ в Telegram.\n\n" +
+        "Открой его через кнопку в боте — только тогда заказ уйдёт в Telegram.\n\n" +
+        "Я сохраню заказ в консоль."
       );
       console.log("ORDER PAYLOAD:", payload);
       return;
@@ -24,8 +33,7 @@
     try {
       tg.ready();
       tg.sendData(json);
-      // Можно закрыть мини-апп после отправки:
-      // tg.close();
+      // tg.close(); // если хочешь закрывать после отправки — раскомментируй
       alert("✅ Предзаказ отправлен!");
     } catch (e) {
       alert("❌ Ошибка отправки. Попробуй ещё раз.");
@@ -33,9 +41,6 @@
     }
   }
 
-  // делаем глобальный объект, который вызывает cart.js
-  window.SPALNIK_TG = {
-    sendOrder,
-    isInsideTelegram,
-  };
+  // Глобальный мост, который вызывает cart.js
+  window.SPALNIK_TG = { sendOrder, isInsideTelegram };
 })();
