@@ -232,7 +232,13 @@
       return;
     }
 
-    TG.sendOrder(payload);
+   if (!TG || typeof TG.sendOrder !== "function") {
+  alert("❌ Ошибка: telegram.js не подключён или Mini App открыт не в Telegram.");
+  console.log("payload:", payload);
+  return;
+}
+TG.sendOrder(payload);
+
 
     // очистка корзины после отправки
     for (const k of Object.keys(cart)) delete cart[k];
