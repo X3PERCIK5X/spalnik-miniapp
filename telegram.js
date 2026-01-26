@@ -1,3 +1,4 @@
+console.log("✅ telegram.js loaded");
 // telegram.js
 (function () {
   const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
