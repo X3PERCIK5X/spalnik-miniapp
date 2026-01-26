@@ -1,46 +1,38 @@
 // telegram.js
-// Отправка заказа из Mini App в бота через Telegram.WebApp.sendData()
-
 (function () {
-  const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
 
-  function isInsideTelegram() {
-    return !!tg;
+  function show(msg) {
+    if (isTelegram && Telegram.WebApp.showAlert) Telegram.WebApp.showAlert(msg);
+    else alert(msg);
   }
 
   function sendOrder(payload) {
-    // На всякий случай убедимся, что payload сериализуется
-    let json = "";
-    try {
-      json = JSON.stringify(payload);
-    } catch (e) {
-      alert("❌ Ошибка: не удалось сформировать данные заказа.");
-      console.error(e);
-      return;
-    }
-
-    // Если открыто в браузере — Telegram API нет
-    if (!isInsideTelegram()) {
-      alert(
-        "⚠️ Мини-апп открыт НЕ в Telegram.\n\n" +
-        "Открой его через кнопку в боте — только тогда заказ уйдёт в Telegram.\n\n" +
-        "Я сохраню заказ в консоль."
-      );
-      console.log("ORDER PAYLOAD:", payload);
+    if (!isTelegram) {
+      show("❌ Mini App открыт не в Telegram.");
       return;
     }
 
     try {
-      tg.ready();
-      tg.sendData(json);
-      // tg.close(); // если хочешь закрывать после отправки — раскомментируй
-      alert("✅ Предзаказ отправлен!");
+      Telegram.WebApp.ready();
+      Telegram.WebApp.sendData(JSON.stringify(payload));
+      show("✅ Предзаказ отправлен!");
     } catch (e) {
-      alert("❌ Ошибка отправки. Попробуй ещё раз.");
-      console.error(e);
+      console.log(e);
+      show("❌ Ошибка отправки. Проверь консоль/бота.");
     }
   }
 
-  // Глобальный мост, который вызывает cart.js
-  window.SPALNIK_TG = { sendOrder, isInsideTelegram };
+  // Экспортируем API
+  window.SPALNIK_TG = {
+    isTelegram,
+    show,
+    sendOrder,
+  };
+
+  // Инициализация Telegram WebApp
+  if (isTelegram) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
 })();
