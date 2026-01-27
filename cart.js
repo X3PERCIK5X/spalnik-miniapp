@@ -265,7 +265,7 @@
       return;
     }
 
-    show("⏳ Отправляю заказ...");
+    setStatus("⏳ Отправляю заказ...");
     let raw = JSON.stringify(payload);
     let compact = false;
     if (raw.length > 3500) {

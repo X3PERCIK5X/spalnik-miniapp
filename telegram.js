@@ -9,8 +9,10 @@ console.log("✅ telegram.js loaded");
   const apiKey = window.SPALNIK_API_KEY || "";
 
   function show(msg) {
-    if (isTelegram && Telegram.WebApp.showAlert) Telegram.WebApp.showAlert(msg);
-    else alert(msg);
+    const isWarning = typeof msg === "string" && (msg.startsWith("❌") || msg.startsWith("⚠️"));
+    if (isTelegram && Telegram.WebApp.showAlert && isWarning) Telegram.WebApp.showAlert(msg);
+    else if (!isTelegram) alert(msg);
+    else console.log(msg);
   }
 
   function sendOrder(payload) {
