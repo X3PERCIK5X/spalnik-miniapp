@@ -5,6 +5,8 @@ console.log("✅ telegram.js loaded");
   const initData = isTelegram ? (Telegram.WebApp.initData || "") : "";
   const initDataUnsafe = isTelegram ? (Telegram.WebApp.initDataUnsafe || {}) : {};
   const hasInitData = Boolean(initData && initData.length > 0);
+  const apiUrl = window.SPALNIK_API_URL || "";
+  const apiKey = window.SPALNIK_API_KEY || "";
 
   function show(msg) {
     if (isTelegram && Telegram.WebApp.showAlert) Telegram.WebApp.showAlert(msg);
@@ -32,14 +34,41 @@ console.log("✅ telegram.js loaded");
     }
   }
 
+  async function sendOrderViaApi(payload) {
+    if (!apiUrl || !apiKey) {
+      show("❌ Не настроен API для отправки заказа.");
+      return { ok: false };
+    }
+    try {
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok === false) {
+        return { ok: false, error: data.error || res.statusText };
+      }
+      return { ok: true };
+    } catch (e) {
+      console.log(e);
+      return { ok: false, error: "network" };
+    }
+  }
+
   // Экспортируем API
   window.SPALNIK_TG = {
     isTelegram,
     initData,
     initDataUnsafe,
     hasInitData,
+    apiUrl,
     show,
     sendOrder,
+    sendOrderViaApi,
   };
 
   // Инициализация Telegram WebApp

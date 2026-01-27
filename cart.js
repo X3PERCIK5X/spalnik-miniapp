@@ -256,7 +256,7 @@
   }
 
   // ---------- Send order ----------
-  function sendOrder() {
+  async function sendOrder() {
     let payload = buildPayload();
     const err = validate(payload);
     if (err) {
@@ -291,7 +291,23 @@
       return;
     }
 
-    TG.sendOrder(payload);
+    let sentViaTelegram = false;
+    if (TG && typeof TG.sendOrder === "function") {
+      TG.sendOrder(payload);
+      sentViaTelegram = true;
+    }
+
+    if (!sentViaTelegram && TG && typeof TG.sendOrderViaApi === "function") {
+      const res = await TG.sendOrderViaApi(payload);
+      if (!res.ok) {
+        const msg = "❌ Не удалось отправить заказ через API.";
+        show(msg);
+        setStatus(msg);
+        if (sendOrderBtn) sendOrderBtn.disabled = false;
+        return;
+      }
+    }
+
     setStatus("✅ Заказ отправлен. Подтверждение придёт сообщением в чате.");
     if (sendOrderBtn) sendOrderBtn.disabled = false;
 
