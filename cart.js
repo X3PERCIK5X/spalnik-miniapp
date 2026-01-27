@@ -286,8 +286,15 @@
   sendOrderBtn.onclick = sendOrder;
 
   // ---------- Init ----------
-  if (TG && TG.isTelegram && !TG.hasInitData) {
-    setStatus("⚠️ Открой Mini App через кнопку бота в группе и нажми «Отправить предзаказ».");
+  if (TG && TG.isTelegram) {
+    if (!TG.hasInitData) {
+      setStatus("⚠️ Открой Mini App через кнопку бота в группе и нажми «Отправить предзаказ».");
+    } else {
+      const chat = TG.initDataUnsafe?.chat || {};
+      const chatType = chat.type || "unknown";
+      const chatId = chat.id ? String(chat.id) : "unknown";
+      setStatus(`✅ Telegram OK. chat_type=${chatType}, chat_id=${chatId}`);
+    }
   }
   renderCategories();
   renderMenu();
