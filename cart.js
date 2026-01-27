@@ -22,6 +22,7 @@
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
+  const statusBox = document.getElementById("statusBox");
 
   // State
   let activeCategoryId = MENU[0]?.id || "";
@@ -31,6 +32,9 @@
   function show(msg) {
     if (TG && typeof TG.show === "function") TG.show(msg);
     else console.log(msg);
+  }
+  function setStatus(msg) {
+    if (statusBox) statusBox.textContent = msg || "";
   }
 
   function findItem(itemId) {
@@ -238,18 +242,25 @@
     const err = validate(payload);
     if (err) {
       show(err);
+      setStatus(err);
       return;
     }
 
     show("⏳ Отправляю заказ...");
+    setStatus("⏳ Отправляю заказ...");
+    if (sendOrderBtn) sendOrderBtn.disabled = true;
 
     if (!TG || typeof TG.sendOrder !== "function") {
       show("❌ Ошибка: telegram.js не подключился (SPALNIK_TG не найден).");
+      setStatus("❌ Ошибка: telegram.js не подключился.");
+      if (sendOrderBtn) sendOrderBtn.disabled = false;
       console.log("payload:", payload);
       return;
     }
 
     TG.sendOrder(payload);
+    setStatus("✅ Заказ отправлен. Подтверждение придёт сообщением в чате.");
+    if (sendOrderBtn) sendOrderBtn.disabled = false;
 
     // очищаем корзину
     for (const k of Object.keys(cart)) delete cart[k];
