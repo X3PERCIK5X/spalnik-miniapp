@@ -25,7 +25,6 @@ console.log("✅ telegram.js loaded");
 
     try {
       Telegram.WebApp.ready();
-      Telegram.WebApp.showAlert("⏳ Отправляю заказ...");
       Telegram.WebApp.sendData(JSON.stringify(payload));
       show("✅ Предзаказ отправлен! Подтверждение придёт сообщением в чате.");
     } catch (e) {
