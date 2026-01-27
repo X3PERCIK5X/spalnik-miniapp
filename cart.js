@@ -295,7 +295,8 @@
     if (TG && typeof TG.sendOrderViaApi === "function" && TG.apiUrl) {
       const res = await TG.sendOrderViaApi(payload);
       if (!res.ok) {
-        const msg = "❌ Не удалось отправить заказ через API.";
+        const detail = res.error ? ` (${res.error})` : "";
+        const msg = `❌ Не удалось отправить заказ через API.${detail}`;
         show(msg);
         setStatus(msg);
         if (sendOrderBtn) sendOrderBtn.disabled = false;
