@@ -291,13 +291,8 @@
       return;
     }
 
-    let sentViaTelegram = false;
-    if (TG && typeof TG.sendOrder === "function") {
-      TG.sendOrder(payload);
-      sentViaTelegram = true;
-    }
-
-    if (!sentViaTelegram && TG && typeof TG.sendOrderViaApi === "function") {
+    // API‑first: надёжный канал. sendData оставляем как фоллбэк.
+    if (TG && typeof TG.sendOrderViaApi === "function" && TG.apiUrl) {
       const res = await TG.sendOrderViaApi(payload);
       if (!res.ok) {
         const msg = "❌ Не удалось отправить заказ через API.";
@@ -306,6 +301,14 @@
         if (sendOrderBtn) sendOrderBtn.disabled = false;
         return;
       }
+    } else if (TG && typeof TG.sendOrder === "function") {
+      TG.sendOrder(payload);
+    } else {
+      const msg = "❌ Нет доступного канала отправки заказа.";
+      show(msg);
+      setStatus(msg);
+      if (sendOrderBtn) sendOrderBtn.disabled = false;
+      return;
     }
 
     setStatus("✅ Заказ отправлен. Подтверждение придёт сообщением в чате.");
