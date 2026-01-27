@@ -345,7 +345,8 @@
       const chat = TG.initDataUnsafe?.chat || {};
       const chatType = chat.type || "unknown";
       const chatId = chat.id ? String(chat.id) : "unknown";
-      setStatus(`✅ Telegram OK. chat_type=${chatType}, chat_id=${chatId}`);
+      const apiState = TG.apiUrl ? "on" : "off";
+      setStatus(`✅ Telegram OK. chat_type=${chatType}, chat_id=${chatId}, api=${apiState}`);
     }
   }
   renderCategories();
