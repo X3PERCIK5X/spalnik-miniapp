@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>Спальник — Меню</title>
 
   <!-- Telegram WebApp -->
@@ -75,8 +75,17 @@
     window.SPALNIK_API_URL = "https://spalnik-order.2000sanchezperez.workers.dev";
     window.SPALNIK_API_KEY = "spalnik_key_123";
   </script>
-  <script defer src="menu.js?v=20260127-6"></script>
-  <script defer src="telegram.js?v=20260127-6"></script>
-  <script defer src="cart.js?v=20260127-6"></script>
+  <script>
+    // Блокируем двойной тап (iOS Safari) для предотвращения зума
+    let __lastTouchEnd = 0;
+    document.addEventListener("touchend", function (e) {
+      const now = Date.now();
+      if (now - __lastTouchEnd < 300) e.preventDefault();
+      __lastTouchEnd = now;
+    }, { passive: false });
+  </script>
+  <script defer src="menu.js?v=20260127-7"></script>
+  <script defer src="telegram.js?v=20260127-7"></script>
+  <script defer src="cart.js?v=20260127-7"></script>
 </body>
 </html>
