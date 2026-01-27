@@ -22,14 +22,9 @@ console.log("✅ telegram.js loaded");
     }
 
     try {
-      const raw = JSON.stringify(payload);
-      if (raw.length > 3500) {
-        show("❌ Заказ слишком большой для отправки. Уменьши корзину.");
-        return;
-      }
       Telegram.WebApp.ready();
       Telegram.WebApp.showAlert("⏳ Отправляю заказ...");
-      Telegram.WebApp.sendData(raw);
+      Telegram.WebApp.sendData(JSON.stringify(payload));
       show("✅ Предзаказ отправлен! Подтверждение придёт сообщением в чате.");
     } catch (e) {
       console.log(e);

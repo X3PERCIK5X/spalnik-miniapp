@@ -219,6 +219,25 @@
     }
 
     return {
+      payload_version: 2,
+      type: "preorder",
+      phone: phoneInput.value.trim(),
+      desired_time: timeInput.value.trim(),
+      comment: commentInput.value.trim(),
+      total: cartTotal(),
+      items,
+      created_at: new Date().toISOString(),
+    };
+  }
+
+  function buildPayloadCompact() {
+    const items = [];
+    for (const [id, qty] of Object.entries(cart)) {
+      items.push({ id, qty: Number(qty) });
+    }
+    return {
+      payload_version: 2,
+      compact: true,
       type: "preorder",
       phone: phoneInput.value.trim(),
       desired_time: timeInput.value.trim(),
@@ -238,7 +257,7 @@
 
   // ---------- Send order ----------
   function sendOrder() {
-    const payload = buildPayload();
+    let payload = buildPayload();
     const err = validate(payload);
     if (err) {
       show(err);
@@ -247,7 +266,21 @@
     }
 
     show("⏳ Отправляю заказ...");
-    setStatus("⏳ Отправляю заказ...");
+    let raw = JSON.stringify(payload);
+    let compact = false;
+    if (raw.length > 3500) {
+      payload = buildPayloadCompact();
+      raw = JSON.stringify(payload);
+      compact = true;
+    }
+    if (raw.length > 3500) {
+      const msg = "❌ Заказ слишком большой для отправки. Уменьши корзину.";
+      show(msg);
+      setStatus(msg);
+      return;
+    }
+
+    setStatus(`⏳ Отправляю заказ... (payload ${raw.length} bytes${compact ? ", compact" : ""})`);
     if (sendOrderBtn) sendOrderBtn.disabled = true;
 
     if (!TG || typeof TG.sendOrder !== "function") {
