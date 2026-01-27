@@ -286,6 +286,9 @@
   sendOrderBtn.onclick = sendOrder;
 
   // ---------- Init ----------
+  if (TG && TG.isTelegram && !TG.hasInitData) {
+    setStatus("⚠️ Открой Mini App через кнопку бота в группе и нажми «Отправить предзаказ».");
+  }
   renderCategories();
   renderMenu();
   cartCountEl.textContent = "0";

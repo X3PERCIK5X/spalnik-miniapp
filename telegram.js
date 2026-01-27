@@ -2,6 +2,9 @@ console.log("✅ telegram.js loaded");
 // telegram.js
 (function () {
   const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
+  const initData = isTelegram ? (Telegram.WebApp.initData || "") : "";
+  const initDataUnsafe = isTelegram ? (Telegram.WebApp.initDataUnsafe || {}) : {};
+  const hasInitData = Boolean(initData && initData.length > 0);
 
   function show(msg) {
     if (isTelegram && Telegram.WebApp.showAlert) Telegram.WebApp.showAlert(msg);
@@ -11,6 +14,10 @@ console.log("✅ telegram.js loaded");
   function sendOrder(payload) {
     if (!isTelegram) {
       show("❌ Mini App открыт не в Telegram.");
+      return;
+    }
+    if (!hasInitData) {
+      show("❌ Mini App открыт не через кнопку бота. Открой из чата и попробуй снова.");
       return;
     }
 
@@ -28,6 +35,9 @@ console.log("✅ telegram.js loaded");
   // Экспортируем API
   window.SPALNIK_TG = {
     isTelegram,
+    initData,
+    initDataUnsafe,
+    hasInitData,
     show,
     sendOrder,
   };
