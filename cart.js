@@ -384,6 +384,15 @@
   closeCartBtn.onclick = closeCart;
   sendOrderBtn.onclick = sendOrder;
 
+  // Скрывать клавиатуру при тапе в пустое место
+  document.addEventListener("touchstart", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    if (t.closest("input, textarea, button")) return;
+    const active = document.activeElement;
+    if (active && active instanceof HTMLElement) active.blur();
+  });
+
   // ---------- Init ----------
   // Без технических статусов при старте
   if (tgProfileEl) {
