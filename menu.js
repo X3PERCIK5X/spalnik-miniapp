@@ -110,7 +110,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "pizza_tomato",
-    title: "🍕 РИМСКАЯ ПИЦЦА — На томатном соусе",
+    title: "РИМСКАЯ ПИЦЦА — На томатном соусе",
     items: [
       {
         id: "pz_meat",
@@ -166,7 +166,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "pizza_cream",
-    title: "🍕 РИМСКАЯ ПИЦЦА — На сливочном соусе",
+    title: "РИМСКАЯ ПИЦЦА — На сливочном соусе",
     items: [
       {
         id: "pz_pear_gorg",
@@ -201,7 +201,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "focaccia",
-    title: "🫓 ФОКАЧЧА",
+    title: "ФОКАЧЧА",
     items: [
       {
         id: "foc_pesto",
@@ -222,7 +222,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "salads",
-    title: "🥗 САЛАТЫ",
+    title: "САЛАТЫ",
     items: [
       {
         id: "sal_caesar_chicken",
@@ -264,7 +264,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "soups",
-    title: "🍜 СУПЫ",
+    title: "СУПЫ",
     items: [
       {
         id: "soup_ramen",
@@ -292,7 +292,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "wings",
-    title: "🍗 КРЫЛЬЯ КУРИНЫЕ",
+    title: "КРЫЛЬЯ КУРИНЫЕ",
     items: [
       {
         id: "wing_breaded",
@@ -320,7 +320,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "beer_set",
-    title: "🍺 ПИВНОЙ СЕТ",
+    title: "ПИВНОЙ СЕТ",
     items: [
       {
         id: "beer_set",
@@ -334,7 +334,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "hot_snacks",
-    title: "🍟 ГОРЯЧИЕ ЗАКУСКИ",
+    title: "ГОРЯЧИЕ ЗАКУСКИ",
     items: [
       // Раздетые креветки перенесены сюда ✅
       {
@@ -448,7 +448,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "cold_snacks",
-    title: "🥜 ХОЛОДНЫЕ ЗАКУСКИ",
+    title: "ХОЛОДНЫЕ ЗАКУСКИ",
     items: [
       {
         id: "cold_guacamole_nachos",
@@ -497,7 +497,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "snacks_dried",
-    title: "🥩 СНЕКИ / ВЯЛЕНОЕ",
+    title: "СНЕКИ / ВЯЛЕНОЕ",
     items: [
       { id: "sn_fistashki", name: "Фисташки", desc: "", weight: "100 г", price: 390 },
       { id: "sn_pretzels", name: "Крендельки", desc: "", weight: "50 г", price: 120 },
@@ -535,7 +535,7 @@ window.SPALNIK_MENU = [
 
   {
   id: "sauces",
-  title: "🧂 СОУСЫ",
+  title: "СОУСЫ",
   items: [
     { id: "sauce_bbq", name: "Барбекю", desc: "", weight: "40 г", price: 100 },
     { id: "sauce_bavarian_mustard", name: "Баварская горчица", desc: "", weight: "40 г", price: 100 },
