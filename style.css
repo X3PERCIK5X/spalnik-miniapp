@@ -310,6 +310,17 @@ body {
   margin-bottom: 8px;
 }
 
+.tg-profile {
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .cart-form input {
   width: 100%;
   margin-top: 4px;

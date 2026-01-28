@@ -22,6 +22,7 @@
   const phoneInput = document.getElementById("phoneInput");
   const timeInput = document.getElementById("timeInput");
   const commentInput = document.getElementById("commentInput");
+  const tgProfileEl = document.getElementById("tgProfile");
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
@@ -218,6 +219,7 @@
 
   // ---------- Build payload ----------
   function buildPayload() {
+    const tgUser = TG?.initDataUnsafe?.user || null;
     const items = [];
 
     for (const [id, qty] of Object.entries(cart)) {
@@ -235,6 +237,14 @@
     return {
       payload_version: 2,
       type: "preorder",
+      tg: tgUser
+        ? {
+            id: tgUser.id,
+            username: tgUser.username || "",
+            first_name: tgUser.first_name || "",
+            last_name: tgUser.last_name || "",
+          }
+        : null,
       phone: phoneInput.value.trim(),
       desired_time: timeInput.value.trim(),
       comment: commentInput.value.trim(),
@@ -245,6 +255,7 @@
   }
 
   function buildPayloadCompact() {
+    const tgUser = TG?.initDataUnsafe?.user || null;
     const items = [];
     for (const [id, qty] of Object.entries(cart)) {
       items.push({ id, qty: Number(qty) });
@@ -253,6 +264,14 @@
       payload_version: 2,
       compact: true,
       type: "preorder",
+      tg: tgUser
+        ? {
+            id: tgUser.id,
+            username: tgUser.username || "",
+            first_name: tgUser.first_name || "",
+            last_name: tgUser.last_name || "",
+          }
+        : null,
       phone: phoneInput.value.trim(),
       desired_time: timeInput.value.trim(),
       comment: commentInput.value.trim(),
@@ -367,6 +386,16 @@
 
   // ---------- Init ----------
   // Без технических статусов при старте
+  if (tgProfileEl) {
+    const u = TG?.initDataUnsafe?.user;
+    if (u) {
+      const name = [u.first_name, u.last_name].filter(Boolean).join(" ").trim();
+      const username = u.username ? `@${u.username}` : "";
+      tgProfileEl.textContent = [name, username].filter(Boolean).join(" ");
+    } else {
+      tgProfileEl.textContent = "—";
+    }
+  }
   renderCategories();
   renderMenu();
   cartCountEl.textContent = "0";
