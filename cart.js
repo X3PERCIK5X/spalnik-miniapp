@@ -510,12 +510,17 @@
     if (TG && typeof TG.sendOrderViaApi === "function" && TG.apiUrl) {
       const res = await TG.sendOrderViaApi(payload);
       if (!res.ok) {
-        const detail = res.error ? ` (${res.error})` : "";
-        const msg = `❌ Не удалось отправить заказ через API.${detail}`;
-        show(msg);
-        setStatus(msg);
-        if (sendOrderBtn) sendOrderBtn.disabled = false;
-        return;
+        // fallback to Telegram sendData if API failed
+        if (TG && typeof TG.sendOrder === "function" && TG.hasInitData) {
+          TG.sendOrder(payload);
+        } else {
+          const detail = res.error ? ` (${res.error})` : "";
+          const msg = `❌ Не удалось отправить заказ через API.${detail}`;
+          show(msg);
+          setStatus(msg);
+          if (sendOrderBtn) sendOrderBtn.disabled = false;
+          return;
+        }
       }
     } else if (TG && typeof TG.sendOrder === "function") {
       TG.sendOrder(payload);
