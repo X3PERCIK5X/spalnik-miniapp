@@ -108,6 +108,14 @@ body {
   padding: 12px;
 }
 
+.category-title {
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  margin: 6px 4px 10px;
+  color: var(--accent);
+}
+
 .menu-item {
   background: var(--panel);
   border: 1px solid var(--border);

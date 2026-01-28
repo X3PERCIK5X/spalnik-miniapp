@@ -76,7 +76,8 @@
       b.onclick = () => {
         activeCategoryId = c.id;
         renderCategories();
-        renderMenu();
+        const section = document.getElementById(`cat-${c.id}`);
+        if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
       };
       categoriesEl.appendChild(b);
     }
@@ -85,52 +86,60 @@
   // ---------- Render Menu ----------
   function renderMenu() {
     menuEl.innerHTML = "";
+    for (const cat of MENU) {
+      const section = document.createElement("section");
+      section.id = `cat-${cat.id}`;
 
-    const cat = MENU.find((c) => c.id === activeCategoryId);
-    if (!cat) return;
+      const title = document.createElement("div");
+      title.className = "category-title";
+      title.textContent = cat.title;
+      section.appendChild(title);
 
-    for (const it of cat.items) {
-      const qty = cart[it.id] || 0;
+      for (const it of cat.items) {
+        const qty = cart[it.id] || 0;
 
-      const card = document.createElement("div");
-      card.className = "menu-item";
+        const card = document.createElement("div");
+        card.className = "menu-item";
 
-      const safeDesc = (it.desc || "").trim();
-      const safeWeight = (it.weight || "").trim();
+        const safeDesc = (it.desc || "").trim();
+        const safeWeight = (it.weight || "").trim();
 
-      card.innerHTML = `
-        <div class="menu-title">${it.name}</div>
-        ${safeDesc ? `<div class="menu-desc">${safeDesc}</div>` : ""}
-        <div class="menu-bottom">
-          <div>
-            ${safeWeight ? `<div class="menu-weight">${safeWeight}</div>` : `<div class="menu-weight"></div>`}
-            <div class="menu-price">${it.price} ₽</div>
+        card.innerHTML = `
+          <div class="menu-title">${it.name}</div>
+          ${safeDesc ? `<div class="menu-desc">${safeDesc}</div>` : ""}
+          <div class="menu-bottom">
+            <div>
+              ${safeWeight ? `<div class="menu-weight">${safeWeight}</div>` : `<div class="menu-weight"></div>`}
+              <div class="menu-price">${it.price} ₽</div>
+            </div>
+
+            <div class="controls">
+              <button class="btnMinus" type="button">-</button>
+              <span class="qty">${qty}</span>
+              <button class="btnPlus" type="button">+</button>
+            </div>
           </div>
+        `;
 
-          <div class="controls">
-            <button class="btnMinus" type="button">-</button>
-            <span class="qty">${qty}</span>
-            <button class="btnPlus" type="button">+</button>
-          </div>
-        </div>
-      `;
+        const minus = card.querySelector(".btnMinus");
+        const plus = card.querySelector(".btnPlus");
 
-      const minus = card.querySelector(".btnMinus");
-      const plus = card.querySelector(".btnPlus");
+        minus.onclick = () => {
+          const current = cart[it.id] || 0;
+          setQty(it.id, current - 1);
+          updateAll();
+        };
 
-      minus.onclick = () => {
-        const current = cart[it.id] || 0;
-        setQty(it.id, current - 1);
-        updateAll();
-      };
+        plus.onclick = () => {
+          const current = cart[it.id] || 0;
+          setQty(it.id, current + 1);
+          updateAll();
+        };
 
-      plus.onclick = () => {
-        const current = cart[it.id] || 0;
-        setQty(it.id, current + 1);
-        updateAll();
-      };
+        section.appendChild(card);
+      }
 
-      menuEl.appendChild(card);
+      menuEl.appendChild(section);
     }
   }
 
