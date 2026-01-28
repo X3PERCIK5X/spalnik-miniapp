@@ -35,15 +35,6 @@ console.log("✅ telegram.js loaded");
     }
   }
 
-  function sendDataOnly(payload) {
-    if (!isTelegram || !hasInitData) return;
-    try {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.sendData(JSON.stringify(payload));
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   async function sendOrderViaApi(payload) {
     if (!apiUrl || !apiKey) {
@@ -80,7 +71,6 @@ console.log("✅ telegram.js loaded");
     show,
     sendOrder,
     sendOrderViaApi,
-    sendDataOnly,
   };
 
   // Инициализация Telegram WebApp
