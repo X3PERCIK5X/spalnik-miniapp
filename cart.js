@@ -61,8 +61,7 @@
     try {
       const raw = localStorage.getItem(HISTORY_KEY);
       const data = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(data)) return data;
-      return [];
+      return Array.isArray(data) ? data : [];
     } catch {
       return [];
     }
@@ -72,7 +71,7 @@
     try {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 10)));
     } catch {
-      // ignore
+      // ignore storage errors
     }
   }
 
@@ -82,7 +81,6 @@
       name: it.name,
       qty: it.qty,
       price: it.price,
-      sum: it.sum,
     }));
     const entry = {
       id: Date.now(),
@@ -389,7 +387,8 @@
     // очищаем текущую корзину
     for (const k of Object.keys(cart)) delete cart[k];
     for (const it of h.items || []) {
-      setQty(it.id, it.qty);
+      if (!it.id) continue;
+      setQty(it.id, it.qty || 1);
     }
     if (phoneInput && h.phone) phoneInput.value = h.phone;
     if (timeInput) timeInput.value = "";
