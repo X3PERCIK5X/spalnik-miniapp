@@ -297,6 +297,44 @@ body {
   padding: 12px;
 }
 
+.order-history {
+  padding: 0 12px 12px;
+}
+
+.history-title {
+  font-weight: 900;
+  font-size: 14px;
+  margin: 6px 0 10px;
+}
+
+.history-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.history-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.history-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.history-repeat {
+  background: var(--accent);
+  border: none;
+  color: #1a1300;
+  font-weight: 900;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
 .cart-item {
   background: var(--panel);
   border: 1px solid var(--border);

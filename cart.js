@@ -18,6 +18,7 @@
   const cartScreen = document.getElementById("cartScreen");
   const closeCartBtn = document.getElementById("closeCart");
   const cartItemsEl = document.getElementById("cartItems");
+  const orderHistoryEl = document.getElementById("orderHistory");
 
   const phoneInput = document.getElementById("phoneInput");
   const timeInput = document.getElementById("timeInput");
@@ -46,6 +47,7 @@
   let activeCategoryId = MENU[0]?.id || "";
   // cart: { itemId: qty }
   const cart = {};
+  const HISTORY_KEY = "spalnik_orders_v1";
 
   function show(msg) {
     if (TG && typeof TG.show === "function") TG.show(msg);
@@ -53,6 +55,45 @@
   }
   function setStatus(msg) {
     if (statusBox) statusBox.textContent = msg || "";
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      const data = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(data)) return data;
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory(list) {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 10)));
+    } catch {
+      // ignore
+    }
+  }
+
+  function pushHistory(payload) {
+    const items = (payload.items || []).map((it) => ({
+      id: it.id,
+      name: it.name,
+      qty: it.qty,
+      price: it.price,
+      sum: it.sum,
+    }));
+    const entry = {
+      id: Date.now(),
+      created_at: payload.created_at,
+      total: payload.total,
+      items,
+      phone: payload.phone || "",
+    };
+    const list = loadHistory();
+    list.unshift(entry);
+    saveHistory(list);
   }
   function setBookingStatus(msg) {
     if (bookingStatus) bookingStatus.textContent = msg || "";
@@ -80,6 +121,44 @@
       if (input.value.length >= before.length) {
         input.selectionStart = input.selectionEnd = pos + (input.value.length - before.length);
       }
+    });
+  }
+
+  function bindTemplate(input, template) {
+    if (!input) return;
+    const editableIndices = [];
+    for (let i = 0; i < template.length; i++) {
+      if (template[i] === "_") editableIndices.push(i);
+    }
+    input.value = template;
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        const cur = input.selectionStart || 0;
+        let idx = editableIndices.slice().reverse().find((i) => i < cur);
+        if (idx === undefined) idx = editableIndices[0];
+        const arr = input.value.split("");
+        arr[idx] = "_";
+        input.value = arr.join("");
+        input.selectionStart = input.selectionEnd = idx;
+        return;
+      }
+      if (/^\d$/.test(e.key)) {
+        e.preventDefault();
+        const cur = input.selectionStart || 0;
+        let idx = editableIndices.find((i) => i >= cur);
+        if (idx === undefined) return;
+        const arr = input.value.split("");
+        arr[idx] = e.key;
+        input.value = arr.join("");
+        const next = editableIndices.find((i) => i > idx) ?? (idx + 1);
+        input.selectionStart = input.selectionEnd = next;
+        return;
+      }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === "Tab") {
+        return;
+      }
+      e.preventDefault();
     });
   }
 
@@ -271,6 +350,53 @@
     }
 
     totalPriceEl.textContent = String(cartTotal());
+
+    renderHistory();
+  }
+
+  function renderHistory() {
+    if (!orderHistoryEl) return;
+    const list = loadHistory();
+    if (!list.length) {
+      orderHistoryEl.classList.add("hidden");
+      orderHistoryEl.innerHTML = "";
+      return;
+    }
+    orderHistoryEl.classList.remove("hidden");
+    orderHistoryEl.innerHTML = `<div class="history-title">История заказов</div>`;
+    for (const h of list) {
+      const itemsText = (h.items || [])
+        .map((it) => `${it.name} × ${it.qty}`)
+        .join(", ");
+      const row = document.createElement("div");
+      row.className = "history-item";
+      row.innerHTML = `
+        <div class="history-meta">${new Date(h.created_at).toLocaleString()}</div>
+        <div class="history-meta">${itemsText}</div>
+        <div class="history-meta">Итого: ${h.total} ₽</div>
+        <div class="history-actions">
+          <button class="history-repeat" type="button">Повторить заказ</button>
+        </div>
+      `;
+      row.querySelector(".history-repeat").onclick = () => {
+        repeatOrder(h);
+      };
+      orderHistoryEl.appendChild(row);
+    }
+  }
+
+  function repeatOrder(h) {
+    // очищаем текущую корзину
+    for (const k of Object.keys(cart)) delete cart[k];
+    for (const it of h.items || []) {
+      setQty(it.id, it.qty);
+    }
+    if (phoneInput && h.phone) phoneInput.value = h.phone;
+    if (timeInput) timeInput.value = "";
+    if (commentInput) commentInput.value = "";
+    updateAll();
+    openCart();
+    setStatus("Заполни время и комментарий, затем отправь заказ.");
   }
 
   // ---------- Build payload ----------
@@ -402,6 +528,7 @@
     }
 
     setStatus("✅ Заказ оформлен. Ожидайте звонка для подтверждения.");
+    pushHistory(payload);
     saveProfile("", phoneInput.value.trim());
     if (sendOrderBtn) sendOrderBtn.disabled = false;
 
@@ -442,6 +569,20 @@
 
     if (!payload.name || !payload.phone || !payload.date || !payload.time || !payload.guests) {
       setBookingStatus("❌ Заполни имя, телефон, дату, время и гостей.");
+      return;
+    }
+
+    // Ограничение времени: 13:00–00:00
+    const timeDigits = payload.time.replace(/\D/g, "");
+    let h = -1, m = -1;
+    if (timeDigits.length >= 4) {
+      h = parseInt(timeDigits.slice(0, 2), 10);
+      m = parseInt(timeDigits.slice(2, 4), 10);
+    }
+    const minutes = h * 60 + m;
+    const isValidRange = (minutes >= 13 * 60 && minutes <= 23 * 60 + 59) || minutes === 0;
+    if (!isValidRange) {
+      setBookingStatus("❌ Бронь доступна с 13:00 до 00:00.");
       return;
     }
 
@@ -518,10 +659,11 @@
     const savedPhone = localStorage.getItem("spalnik_phone") || "";
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
-  bindMask(timeInput, formatTime);
-  bindMask(bookingTime, formatTime);
-  bindMask(bookingDate, formatDate);
+  bindTemplate(timeInput, "__:__");
+  bindTemplate(bookingTime, "__:__");
+  bindTemplate(bookingDate, "__.__.____");
   setActiveTab("menu");
+  renderHistory();
   renderCategories();
   renderMenu();
   cartCountEl.textContent = "0";
