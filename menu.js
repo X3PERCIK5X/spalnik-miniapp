@@ -5,7 +5,7 @@
 window.SPALNIK_MENU = [
   {
     id: "meat",
-    title: "🥩 МЯСО",
+    title: "МЯСО",
     items: [
       {
         id: "meat_chicken_steak",
@@ -47,7 +47,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "sausages",
-    title: "🌭 КОЛБАСКИ",
+    title: "КОЛБАСКИ",
     items: [
       {
         id: "saus_bavarian_pork",
@@ -68,7 +68,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "sausage_set",
-    title: "🌭🌭 КОЛБАСНЫЙ СЕТ",
+    title: "КОЛБАСНЫЙ СЕТ",
     items: [
       {
         id: "set_11",
@@ -89,7 +89,7 @@ window.SPALNIK_MENU = [
 
   {
     id: "rimburger",
-    title: "🍔 РИМБУРГЕР (стритфуд в римской основе)",
+    title: "РИМБУРГЕР (стритфуд в римской основе)",
     items: [
       {
         id: "rb_pulled_pork",
