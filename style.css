@@ -101,6 +101,26 @@ body {
   padding: 12px;
 }
 
+.top-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 0;
+}
+
+.tab-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.tab-btn.active {
+  border-color: var(--accent);
+}
+
 .category {
   padding: 8px 14px;
   border-radius: 999px;
@@ -308,6 +328,46 @@ body {
   font-size: 12px;
   color: var(--muted);
   margin-bottom: 8px;
+}
+
+.booking {
+  padding: 12px;
+}
+
+.booking-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.booking-title {
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.booking-card label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.booking-card input {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.booking-status {
+  margin: 8px 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .tg-profile {

@@ -25,11 +25,50 @@
   </button>
   </header>
 
-  <!-- Категории -->
-  <div id="categories" class="categories"></div>
+  <!-- Переключатель -->
+  <div class="top-tabs">
+    <button id="tabMenu" class="tab-btn active" type="button">Меню</button>
+    <button id="tabBooking" class="tab-btn" type="button">Забронировать стол</button>
+  </div>
 
   <!-- Меню -->
-  <main id="menu" class="menu"></main>
+  <section id="menuSection">
+    <div id="categories" class="categories"></div>
+    <main id="menu" class="menu"></main>
+  </section>
+
+  <!-- Бронь -->
+  <section id="bookingSection" class="booking hidden">
+    <div class="booking-card">
+      <div class="booking-title">Бронь стола</div>
+      <label>
+        Имя *
+        <input id="bookingName" type="text" placeholder="Ваше имя" />
+      </label>
+      <label>
+        Телефон *
+        <input id="bookingPhone" type="text" placeholder="+7..." />
+      </label>
+      <label>
+        Дата *
+        <input id="bookingDate" type="text" placeholder="Например 26.01" />
+      </label>
+      <label>
+        Время *
+        <input id="bookingTime" type="text" placeholder="Например 19:30" />
+      </label>
+      <label>
+        Количество гостей *
+        <input id="bookingGuests" type="number" min="1" max="50" placeholder="2" />
+      </label>
+      <label>
+        Комментарий (необязательно)
+        <input id="bookingComment" type="text" placeholder="У окна" />
+      </label>
+      <div id="bookingStatus" class="booking-status"></div>
+      <button id="bookingSend" class="send-order" type="button">Отправить бронь</button>
+    </div>
+  </section>
 
   <!-- КОРЗИНА -->
   <div id="cartScreen" class="cart hidden">
@@ -95,8 +134,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260127-12"></script>
-  <script defer src="telegram.js?v=20260127-12"></script>
-  <script defer src="cart.js?v=20260127-12"></script>
+  <script defer src="menu.js?v=20260127-13"></script>
+  <script defer src="telegram.js?v=20260127-13"></script>
+  <script defer src="cart.js?v=20260127-13"></script>
 </body>
 </html>

@@ -24,6 +24,20 @@
   const commentInput = document.getElementById("commentInput");
   const tgProfileEl = document.getElementById("tgProfile");
 
+  const tabMenu = document.getElementById("tabMenu");
+  const tabBooking = document.getElementById("tabBooking");
+  const menuSection = document.getElementById("menuSection");
+  const bookingSection = document.getElementById("bookingSection");
+
+  const bookingName = document.getElementById("bookingName");
+  const bookingPhone = document.getElementById("bookingPhone");
+  const bookingDate = document.getElementById("bookingDate");
+  const bookingTime = document.getElementById("bookingTime");
+  const bookingGuests = document.getElementById("bookingGuests");
+  const bookingComment = document.getElementById("bookingComment");
+  const bookingStatus = document.getElementById("bookingStatus");
+  const bookingSend = document.getElementById("bookingSend");
+
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
   const statusBox = document.getElementById("statusBox");
@@ -39,6 +53,23 @@
   }
   function setStatus(msg) {
     if (statusBox) statusBox.textContent = msg || "";
+  }
+  function setBookingStatus(msg) {
+    if (bookingStatus) bookingStatus.textContent = msg || "";
+  }
+
+  function setActiveTab(name) {
+    if (!tabMenu || !tabBooking || !menuSection || !bookingSection) return;
+    const isMenu = name === "menu";
+    tabMenu.classList.toggle("active", isMenu);
+    tabBooking.classList.toggle("active", !isMenu);
+    menuSection.classList.toggle("hidden", !isMenu);
+    bookingSection.classList.toggle("hidden", isMenu);
+  }
+
+  function saveProfile(name, phone) {
+    if (name) localStorage.setItem("spalnik_name", name);
+    if (phone) localStorage.setItem("spalnik_phone", phone);
   }
 
   function findItem(itemId) {
@@ -346,6 +377,7 @@
     }
 
     setStatus("✅ Заказ оформлен. Ожидайте звонка для подтверждения.");
+    saveProfile("", phoneInput.value.trim());
     if (sendOrderBtn) sendOrderBtn.disabled = false;
 
     // очищаем корзину
@@ -356,6 +388,47 @@
 
     updateAll();
     renderCart();
+  }
+
+  async function sendBooking() {
+    if (!TG || typeof TG.sendOrderViaApi !== "function" || !TG.apiUrl) {
+      setBookingStatus("❌ Канал брони не настроен.");
+      return;
+    }
+
+    const payload = {
+      type: "booking",
+      tg: TG?.initDataUnsafe?.user
+        ? {
+            id: TG.initDataUnsafe.user.id,
+            username: TG.initDataUnsafe.user.username || "",
+            first_name: TG.initDataUnsafe.user.first_name || "",
+            last_name: TG.initDataUnsafe.user.last_name || "",
+          }
+        : null,
+      name: bookingName.value.trim(),
+      phone: bookingPhone.value.trim(),
+      date: bookingDate.value.trim(),
+      time: bookingTime.value.trim(),
+      guests: bookingGuests.value.trim(),
+      comment: bookingComment.value.trim(),
+      created_at: new Date().toISOString(),
+    };
+
+    if (!payload.name || !payload.phone || !payload.date || !payload.time || !payload.guests) {
+      setBookingStatus("❌ Заполни имя, телефон, дату, время и гостей.");
+      return;
+    }
+
+    setBookingStatus("⏳ Отправляю бронь...");
+    const res = await TG.sendOrderViaApi(payload);
+    if (!res.ok) {
+      setBookingStatus("❌ Не удалось отправить бронь.");
+      return;
+    }
+
+    setBookingStatus("✅ Бронь отправлена. Мы свяжемся с вами.");
+    saveProfile(payload.name, payload.phone);
   }
 
   // ---------- UI updates ----------
@@ -383,6 +456,9 @@
   if (cartFab) cartFab.onclick = openCart;
   closeCartBtn.onclick = closeCart;
   sendOrderBtn.onclick = sendOrder;
+  if (tabMenu) tabMenu.onclick = () => setActiveTab("menu");
+  if (tabBooking) tabBooking.onclick = () => setActiveTab("booking");
+  if (bookingSend) bookingSend.onclick = sendBooking;
 
   // Скрывать клавиатуру при тапе в пустое место
   document.addEventListener("touchstart", (e) => {
@@ -405,6 +481,19 @@
       tgProfileEl.textContent = "—";
     }
   }
+  if (phoneInput) {
+    const savedPhone = localStorage.getItem("spalnik_phone") || "";
+    if (!phoneInput.value) phoneInput.value = savedPhone;
+  }
+  if (bookingName) {
+    const savedName = localStorage.getItem("spalnik_name") || "";
+    if (!bookingName.value) bookingName.value = savedName;
+  }
+  if (bookingPhone) {
+    const savedPhone = localStorage.getItem("spalnik_phone") || "";
+    if (!bookingPhone.value) bookingPhone.value = savedPhone;
+  }
+  setActiveTab("menu");
   renderCategories();
   renderMenu();
   cartCountEl.textContent = "0";
