@@ -58,6 +58,31 @@
     if (bookingStatus) bookingStatus.textContent = msg || "";
   }
 
+  function formatTime(value) {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    if (digits.length <= 2) return digits;
+    return `${digits.slice(0, 2)}:${digits.slice(2)}`;
+  }
+
+  function formatDate(value) {
+    const digits = value.replace(/\D/g, "").slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4)}`;
+  }
+
+  function bindMask(input, formatter) {
+    if (!input) return;
+    input.addEventListener("input", () => {
+      const pos = input.selectionStart || 0;
+      const before = input.value;
+      input.value = formatter(input.value);
+      if (input.value.length >= before.length) {
+        input.selectionStart = input.selectionEnd = pos + (input.value.length - before.length);
+      }
+    });
+  }
+
   function setActiveTab(name) {
     if (!tabMenu || !tabBooking || !menuSection || !bookingSection) return;
     const isMenu = name === "menu";
@@ -498,6 +523,9 @@
     const savedPhone = localStorage.getItem("spalnik_phone") || "";
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
+  bindMask(timeInput, formatTime);
+  bindMask(bookingTime, formatTime);
+  bindMask(bookingDate, formatDate);
   setActiveTab("menu");
   renderCategories();
   renderMenu();
