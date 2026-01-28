@@ -429,6 +429,11 @@
 
     setBookingStatus("✅ Бронь отправлена. Мы свяжемся с вами.");
     saveProfile(payload.name, payload.phone);
+
+    // Отправляем копию в бота для напоминаний
+    if (TG && typeof TG.sendDataOnly === "function") {
+      TG.sendDataOnly(payload);
+    }
   }
 
   // ---------- UI updates ----------
