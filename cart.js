@@ -11,6 +11,9 @@
 
   const cartButton = document.getElementById("cartButton");
   const cartCountEl = document.getElementById("cartCount");
+  const cartFab = document.getElementById("cartFab");
+  const cartFabCount = document.getElementById("cartFabCount");
+  const cartFabTotal = document.getElementById("cartFabTotal");
 
   const cartScreen = document.getElementById("cartScreen");
   const closeCartBtn = document.getElementById("closeCart");
@@ -146,11 +149,13 @@
   // ---------- Cart Screen ----------
   function openCart() {
     cartScreen.classList.remove("hidden");
+    if (cartFab) cartFab.classList.add("hidden");
     renderCart();
   }
 
   function closeCart() {
     cartScreen.classList.add("hidden");
+    updateAll();
   }
 
   function renderCart() {
@@ -336,14 +341,27 @@
 
   // ---------- UI updates ----------
   function updateAll() {
-    cartCountEl.textContent = String(cartCount());
-    totalPriceEl.textContent = String(cartTotal());
+    const count = cartCount();
+    const total = cartTotal();
+    cartCountEl.textContent = String(count);
+    totalPriceEl.textContent = String(total);
     renderCategories();
     renderMenu();
+
+    if (cartFab && cartFabCount && cartFabTotal) {
+      cartFabCount.textContent = String(count);
+      cartFabTotal.textContent = String(total);
+      if (count > 0 && cartScreen.classList.contains("hidden")) {
+        cartFab.classList.remove("hidden");
+      } else {
+        cartFab.classList.add("hidden");
+      }
+    }
   }
 
   // ---------- Events ----------
   cartButton.onclick = openCart;
+  if (cartFab) cartFab.onclick = openCart;
   closeCartBtn.onclick = closeCart;
   sendOrderBtn.onclick = sendOrder;
 

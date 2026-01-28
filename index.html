@@ -19,10 +19,10 @@
       <img class="topbar-logo" src="logo.jpeg" alt="Спальник" />
     </div>
 
-    <!-- Иконка корзины -->
-    <button id="cartButton" class="cart-button">
-      🧺 <span id="cartCount">0</span>
-    </button>
+  <!-- Иконка корзины -->
+  <button id="cartButton" class="cart-button">
+    🧺 <span id="cartCount">0</span>
+  </button>
   </header>
 
   <!-- Категории -->
@@ -68,6 +68,13 @@
     </div>
   </div>
 
+  <!-- Плавающая корзина -->
+  <button id="cartFab" class="cart-fab hidden" type="button">
+    <span class="cart-fab-title">Корзина</span>
+    <span class="cart-fab-count" id="cartFabCount">0</span>
+    <span class="cart-fab-total"><span id="cartFabTotal">0</span> ₽</span>
+  </button>
+
   <!-- Скрипты -->
   <script>
     // Альтернативный канал доставки заказа (Cloudflare Worker)
@@ -83,8 +90,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260127-10"></script>
-  <script defer src="telegram.js?v=20260127-10"></script>
-  <script defer src="cart.js?v=20260127-10"></script>
+  <script defer src="menu.js?v=20260127-11"></script>
+  <script defer src="telegram.js?v=20260127-11"></script>
+  <script defer src="cart.js?v=20260127-11"></script>
 </body>
 </html>
