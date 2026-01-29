@@ -51,14 +51,14 @@ body {
 
 .topbar-logo {
   width: 100%;
-  height: 72px;
+  height: 70px;
   max-width: 100%;
   display: block;
   object-fit: contain;
-  object-position: left center;
+  object-position: center left;
   border-radius: 0;
   background: #ffffff;
-  transform: translateX(-12px);
+  transform: translateX(0);
 }
 
 .topbar-right {
