@@ -20,6 +20,8 @@
   const closeCartBtn = document.getElementById("closeCart");
   const cartItemsEl = document.getElementById("cartItems");
   const orderHistoryEl = document.getElementById("orderHistory");
+  const ordersScreen = document.getElementById("ordersScreen");
+  const closeOrdersBtn = document.getElementById("closeOrders");
 
   const phoneInput = document.getElementById("phoneInput");
   const timeInput = document.getElementById("timeInput");
@@ -48,7 +50,10 @@
   let activeCategoryId = MENU[0]?.id || "";
   // cart: { itemId: qty }
   const cart = {};
-  const HISTORY_KEY = "spalnik_orders_v1";
+  function getHistoryKey() {
+    const uid = TG?.initDataUnsafe?.user?.id;
+    return uid ? `spalnik_orders_v1_${uid}` : "spalnik_orders_v1_guest";
+  }
 
   function show(msg) {
     if (TG && typeof TG.show === "function") TG.show(msg);
@@ -60,7 +65,7 @@
 
   function loadHistory() {
     try {
-      const raw = localStorage.getItem(HISTORY_KEY);
+      const raw = localStorage.getItem(getHistoryKey());
       const data = raw ? JSON.parse(raw) : [];
       return Array.isArray(data) ? data : [];
     } catch {
@@ -70,7 +75,7 @@
 
   function saveHistory(list) {
     try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 10)));
+      localStorage.setItem(getHistoryKey(), JSON.stringify(list.slice(0, 10)));
     } catch {
       // ignore storage errors
     }
@@ -295,6 +300,7 @@
   // ---------- Cart Screen ----------
   function openCart() {
     cartScreen.classList.remove("hidden");
+    if (ordersScreen) ordersScreen.classList.add("hidden");
     if (cartFab) cartFab.classList.add("hidden");
     renderCart();
   }
@@ -302,6 +308,18 @@
   function closeCart() {
     cartScreen.classList.add("hidden");
     updateAll();
+  }
+
+  function openOrders() {
+    if (!ordersScreen) return;
+    ordersScreen.classList.remove("hidden");
+    cartScreen.classList.add("hidden");
+    renderHistory();
+  }
+
+  function closeOrders() {
+    if (!ordersScreen) return;
+    ordersScreen.classList.add("hidden");
   }
 
   function renderCart() {
@@ -366,17 +384,15 @@
 
   function renderHistory() {
     if (!orderHistoryEl) return;
-    const list = loadHistory().slice(0, 5);
+    const list = loadHistory().slice(0, 10);
     if (historyButton) {
       if (list.length) historyButton.classList.remove("hidden");
       else historyButton.classList.add("hidden");
     }
     if (!list.length) {
-      orderHistoryEl.classList.add("hidden");
-      orderHistoryEl.innerHTML = "";
+      orderHistoryEl.innerHTML = `<div class="history-title">Пока нет заказов</div>`;
       return;
     }
-    orderHistoryEl.classList.remove("hidden");
     orderHistoryEl.innerHTML = `<div class="history-title">История заказов</div>`;
     for (const h of list) {
       const itemsText = (h.items || [])
@@ -639,19 +655,10 @@
 
   // ---------- Events ----------
   cartButton.onclick = openCart;
-  if (historyButton) {
-    historyButton.onclick = () => {
-      openCart();
-      const list = loadHistory();
-      if (list.length) {
-        setTimeout(() => {
-          orderHistoryEl?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 0);
-      }
-    };
-  }
+  if (historyButton) historyButton.onclick = openOrders;
   if (cartFab) cartFab.onclick = openCart;
   closeCartBtn.onclick = closeCart;
+  if (closeOrdersBtn) closeOrdersBtn.onclick = closeOrders;
   sendOrderBtn.onclick = sendOrder;
   if (tabMenu) tabMenu.onclick = () => setActiveTab("menu");
   if (tabBooking) tabBooking.onclick = () => setActiveTab("booking");
