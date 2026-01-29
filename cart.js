@@ -130,39 +130,39 @@
 
   function bindTemplate(input, template) {
     if (!input) return;
-    const editableIndices = [];
-    for (let i = 0; i < template.length; i++) {
-      if (template[i] === "_") editableIndices.push(i);
+
+    function fillTemplate(digits) {
+      let di = 0;
+      return template.replace(/_/g, () => (di < digits.length ? digits[di++] : "_"));
     }
+
+    function caretToNext() {
+      const next = input.value.indexOf("_");
+      const pos = next === -1 ? input.value.length : next;
+      input.selectionStart = input.selectionEnd = pos;
+    }
+
+    function normalize() {
+      const digits = input.value.replace(/\D/g, "");
+      input.value = fillTemplate(digits);
+      caretToNext();
+    }
+
     input.value = template;
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace") {
-        e.preventDefault();
-        const cur = input.selectionStart || 0;
-        let idx = editableIndices.slice().reverse().find((i) => i < cur);
-        if (idx === undefined) idx = editableIndices[0];
-        const arr = input.value.split("");
-        arr[idx] = "_";
-        input.value = arr.join("");
-        input.selectionStart = input.selectionEnd = idx;
-        return;
+
+    input.addEventListener("focus", () => {
+      if (!input.value || input.value === template) {
+        input.value = template;
       }
-      if (/^\d$/.test(e.key)) {
-        e.preventDefault();
-        const cur = input.selectionStart || 0;
-        let idx = editableIndices.find((i) => i >= cur);
-        if (idx === undefined) return;
-        const arr = input.value.split("");
-        arr[idx] = e.key;
-        input.value = arr.join("");
-        const next = editableIndices.find((i) => i > idx) ?? (idx + 1);
-        input.selectionStart = input.selectionEnd = next;
-        return;
-      }
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === "Tab") {
-        return;
-      }
-      e.preventDefault();
+      caretToNext();
+    });
+
+    input.addEventListener("click", () => {
+      caretToNext();
+    });
+
+    input.addEventListener("input", () => {
+      normalize();
     });
   }
 
