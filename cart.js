@@ -89,7 +89,7 @@
       items,
       phone: payload.phone || "",
     };
-    const list = loadHistory();
+    const list = loadHistory().slice(0, 5);
     list.unshift(entry);
     saveHistory(list);
   }
