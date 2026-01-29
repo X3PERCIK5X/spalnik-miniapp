@@ -516,7 +516,7 @@ body {
 }
 
 .booking-block {
-  background: #ffffff;
+  background: var(--panel);
   border-radius: 16px;
   padding: 12px;
   margin-bottom: 10px;
@@ -525,7 +525,7 @@ body {
 .booking-label {
   font-size: 14px;
   font-weight: 800;
-  color: #111111;
+  color: var(--text);
   margin-bottom: 10px;
 }
 
@@ -536,23 +536,15 @@ body {
 }
 
 .booking-time-row {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 24px) / 4);
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  scrollbar-width: none;
-}
-
-.booking-time-row::-webkit-scrollbar {
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .booking-chip {
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #111111;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
   border-radius: 999px;
   padding: 10px 12px;
   font-weight: 800;
@@ -583,6 +575,12 @@ body {
   opacity: 0;
 }
 
+.booking-value {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
 .booking-card label {
   display: block;
   font-size: 12px;
@@ -611,6 +609,63 @@ body {
   bottom: 12px;
   width: 100%;
   margin-top: 6px;
+}
+
+.booking-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.booking-modal-card {
+  width: 100%;
+  max-width: 360px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.booking-modal-title {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.booking-modal-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 16px;
+}
+
+.booking-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.booking-modal-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.booking-modal-btn.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #111111;
 }
 
 .tg-profile {
