@@ -30,9 +30,6 @@ body {
    TOP BAR
 ========================= */
 .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -134,10 +131,10 @@ body {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 4px 12px 6px;
+  padding: 0 12px 6px;
   scrollbar-width: none;
   position: sticky;
-  top: 128px;
+  top: 0;
   z-index: 8;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
@@ -152,8 +149,6 @@ body {
   gap: 16px;
   padding: 0 12px 0;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 88px;
   z-index: 9;
   background: var(--bg);
 }
@@ -266,6 +261,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
 }
 
 .menu-title {
@@ -293,7 +289,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: auto;
 }
 
 .menu-weight {
@@ -313,16 +309,16 @@ body {
 .controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 4px 8px;
+  padding: 4px 6px;
 }
 
 .controls button {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: none;
   background: var(--panel);
@@ -332,7 +328,7 @@ body {
 }
 
 .controls span {
-  min-width: 18px;
+  min-width: 16px;
   text-align: center;
   font-weight: 800;
 }
