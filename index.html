@@ -42,33 +42,41 @@
   <!-- Бронь -->
   <section id="bookingSection" class="booking hidden">
     <div class="booking-card">
-      <div class="booking-title">Бронь стола</div>
-      <label>
-        Имя *
-        <input id="bookingName" type="text" placeholder="Ваше имя" />
-      </label>
-      <label>
-        Телефон *
-        <input id="bookingPhone" type="text" placeholder="+7..." />
-      </label>
-      <label>
-        Дата *
-        <input id="bookingDate" type="text" placeholder="ДД.ММ.ГГГГ" />
-      </label>
-      <label>
-        Время *
-        <input id="bookingTime" type="text" placeholder="ЧЧ:ММ" />
-      </label>
-      <label>
-        Количество гостей *
-        <input id="bookingGuests" type="number" min="1" max="50" placeholder="2" />
-      </label>
-      <label>
-        Комментарий (необязательно)
-        <input id="bookingComment" type="text" placeholder="У окна" />
-      </label>
+      <div class="booking-title">БРОНИРОВАНИЕ СТОЛА</div>
+
+      <div class="booking-block">
+        <div class="booking-label">Дата</div>
+        <div class="booking-date-row">
+          <button id="bookingToday" class="booking-chip" type="button">Сегодня</button>
+          <button id="bookingTomorrow" class="booking-chip" type="button">Завтра</button>
+          <button id="bookingCalendar" class="booking-chip booking-chip-icon" type="button">📅</button>
+        </div>
+        <input id="bookingDate" class="booking-hidden-input" type="text" placeholder="ДД.ММ.ГГГГ" />
+      </div>
+
+      <div class="booking-block">
+        <div class="booking-label">Время</div>
+        <div id="bookingTimeSlots" class="booking-time-row"></div>
+        <input id="bookingTime" class="booking-hidden-input" type="text" placeholder="ЧЧ:ММ" />
+      </div>
+
+      <div class="booking-block">
+        <label>
+          Имя *
+          <input id="bookingName" type="text" placeholder="Имя и фамилия гостя" />
+        </label>
+        <label>
+          Телефон *
+          <input id="bookingPhone" type="text" placeholder="+7..." />
+        </label>
+        <label>
+          Комментарий (необязательно)
+          <input id="bookingComment" type="text" placeholder="Пожелания по бронированию" />
+        </label>
+      </div>
+
       <div id="bookingStatus" class="booking-status"></div>
-      <button id="bookingSend" class="send-order" type="button">Отправить бронь</button>
+      <button id="bookingSend" class="send-order" type="button">Забронировать стол</button>
     </div>
   </section>
 
@@ -146,8 +154,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260128-12"></script>
-  <script defer src="telegram.js?v=20260128-12"></script>
-  <script defer src="cart.js?v=20260128-12"></script>
+  <script defer src="menu.js?v=20260128-14"></script>
+  <script defer src="telegram.js?v=20260128-14"></script>
+  <script defer src="cart.js?v=20260128-14"></script>
 </body>
 </html>
