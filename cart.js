@@ -11,6 +11,7 @@
 
   const cartButton = document.getElementById("cartButton");
   const cartCountEl = document.getElementById("cartCount");
+  const historyButton = document.getElementById("historyButton");
   const cartFab = document.getElementById("cartFab");
   const cartFabCount = document.getElementById("cartFabCount");
   const cartFabTotal = document.getElementById("cartFabTotal");
@@ -365,7 +366,11 @@
 
   function renderHistory() {
     if (!orderHistoryEl) return;
-    const list = loadHistory();
+    const list = loadHistory().slice(0, 5);
+    if (historyButton) {
+      if (list.length) historyButton.classList.remove("hidden");
+      else historyButton.classList.add("hidden");
+    }
     if (!list.length) {
       orderHistoryEl.classList.add("hidden");
       orderHistoryEl.innerHTML = "";
@@ -634,6 +639,17 @@
 
   // ---------- Events ----------
   cartButton.onclick = openCart;
+  if (historyButton) {
+    historyButton.onclick = () => {
+      openCart();
+      const list = loadHistory();
+      if (list.length) {
+        setTimeout(() => {
+          orderHistoryEl?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 0);
+      }
+    };
+  }
   if (cartFab) cartFab.onclick = openCart;
   closeCartBtn.onclick = closeCart;
   sendOrderBtn.onclick = sendOrder;
