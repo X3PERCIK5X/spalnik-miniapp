@@ -2,6 +2,49 @@
 // Данные меню. Категории 1-в-1 как в меню пользователя.
 // Поля: id, name, desc, weight, price
 
+const IMG = (name) => encodeURI(`фото меню/${name}`);
+
+// Карта изображений по id (добавлено из папки "фото меню")
+window.SPALNIK_IMAGES = {
+  meat_chicken_steak: IMG("стейк ципленка.JPG"),
+  meat_add_fries_idaho: IMG("Айдахо с кетчупом.JPG"),
+  rb_pulled_pork: IMG("Римбургер свинина.JPG"),
+  pz_bbq: IMG("пицца ББК.JPG"),
+  pz_chicken_bbq: IMG("Пицца кура барбекю.JPG"),
+  pz_hellboy: IMG("пицца хэлбой.JPG"),
+  pz_mushroom: IMG("пицца грибная.JPG"),
+  pz_shrimp: IMG("Пицца креветка.JPG"),
+  sal_caesar_chicken: IMG("Цезарь курица.JPG"),
+  sal_shrimp_tomyam: IMG("салат креветка ям.JPG"),
+  sal_a_ya_tomat: IMG("Салат а я томат .JPG"),
+  soup_ramen: IMG("Суп рамен.JPG"),
+  soup_tomyam: IMG("суп том ям.JPG"),
+  wing_breaded: IMG("куриные крылья в панировке.JPG"),
+  beer_set: IMG("пивной сет.JPG"),
+  hot_squid_rings: IMG("кольца кальмара в панировке.JPG"),
+  hot_fish_chips: IMG("фиш энд чипс.JPG"),
+  hot_nuggets: IMG("наггетсы.JPG"),
+  hot_cheese_sticks: IMG("Сырные палочки.JPG"),
+  hot_sweetpotato_fries: IMG("батат фри.JPG"),
+  hot_breaded_shrimp: IMG("креветки в панировке.JPG"),
+  hot_halloumi: IMG("халумис гриль.JPG"),
+  cold_guacamole_nachos: IMG("гуакамоле с начос.JPG"),
+  cold_pickled_egg: IMG("яйцо маринованное.JPG"),
+  cold_gherkins: IMG("корнишоны.JPG"),
+  sauce_bbq: IMG("соус барбекю.JPG"),
+  sauce_bavarian_mustard: IMG("соус баварская горчица.JPG"),
+  sauce_lingonberry: IMG("соус брусничный.JPG"),
+  sauce_tzatziki: IMG("соус дзадзыки.JPG"),
+  sauce_guacamole: IMG("соус гуакамоле.JPG"),
+  sauce_cheddar: IMG("соус чеддер.JPG"),
+  sauce_soy: IMG("соевый соус.JPG"),
+  sauce_ketchup: IMG("соус кетчуп.JPG"),
+  sauce_ranch: IMG("соус ранч.JPG"),
+  sauce_blue_cheese: IMG("соус блю чиз.JPG"),
+  sauce_sour_cream: IMG("сметана.JPG"),
+  jerky_beef_adjika: IMG("вяленое мясо.JPG"),
+};
+
 window.SPALNIK_MENU = [
   {
     id: "meat",

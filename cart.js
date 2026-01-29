@@ -4,6 +4,7 @@
 (function () {
   const MENU = window.SPALNIK_MENU || [];
   const TG = window.SPALNIK_TG;
+  const IMAGE_MAP = window.SPALNIK_IMAGES || {};
 
   // DOM
   const categoriesEl = document.getElementById("categories");
@@ -258,7 +259,7 @@
         const safeDesc = (it.desc || "").trim();
         const safeWeight = (it.weight || "").trim();
 
-        const imageUrl = (it.image || it.img || it.photo || "").trim();
+        const imageUrl = (it.image || it.img || it.photo || IMAGE_MAP[it.id] || IMAGE_MAP[it.name] || "").trim();
 
         card.innerHTML = `
           <div class="menu-image">
