@@ -45,23 +45,17 @@
       <div class="booking-title">БРОНИРОВАНИЕ СТОЛА</div>
 
       <div class="booking-block">
-        <div class="booking-label">Дата</div>
-        <div class="booking-date-row">
-          <button id="bookingToday" class="booking-chip" type="button">Сегодня</button>
-          <button id="bookingTomorrow" class="booking-chip" type="button">Завтра</button>
-          <button id="bookingCalendar" class="booking-chip booking-chip-icon" type="button">📅</button>
-        </div>
-        <div id="bookingDateValue" class="booking-value">Не выбрано</div>
-        <input id="bookingDate" class="booking-hidden-input" type="text" placeholder="ДД.ММ.ГГГГ" />
+        <label>
+          Дата *
+          <input id="bookingDate" type="text" placeholder="ДД.ММ.ГГГГ" />
+        </label>
       </div>
 
       <div class="booking-block">
-        <div class="booking-label">Время</div>
-        <div class="booking-time-row">
-          <button id="bookingTimeManual" class="booking-chip" type="button">Выбрать время</button>
-          <div id="bookingTimeValue" class="booking-value">Не выбрано</div>
-        </div>
-        <input id="bookingTime" class="booking-hidden-input" type="text" placeholder="ЧЧ:ММ" />
+        <label>
+          Время *
+          <input id="bookingTime" type="text" placeholder="ЧЧ:ММ" />
+        </label>
       </div>
 
       <div class="booking-block">
@@ -87,18 +81,6 @@
       <button id="bookingSend" class="send-order" type="button">Забронировать стол</button>
     </div>
   </section>
-
-  <!-- Модалка для даты/времени -->
-  <div id="bookingModal" class="booking-modal hidden">
-    <div class="booking-modal-card">
-      <div id="bookingModalTitle" class="booking-modal-title">Введите значение</div>
-      <input id="bookingModalInput" class="booking-modal-input" type="text" inputmode="numeric" />
-      <div class="booking-modal-actions">
-        <button id="bookingModalCancel" class="booking-modal-btn" type="button">Отмена</button>
-        <button id="bookingModalOk" class="booking-modal-btn primary" type="button">Готово</button>
-      </div>
-    </div>
-  </div>
 
   <!-- КОРЗИНА -->
   <div id="cartScreen" class="cart hidden">
@@ -174,8 +156,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260128-16"></script>
-  <script defer src="telegram.js?v=20260128-16"></script>
-  <script defer src="cart.js?v=20260128-16"></script>
+  <script defer src="menu.js?v=20260128-18"></script>
+  <script defer src="telegram.js?v=20260128-18"></script>
+  <script defer src="cart.js?v=20260128-18"></script>
 </body>
 </html>

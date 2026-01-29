@@ -530,56 +530,12 @@ body {
   margin-bottom: 10px;
 }
 
-.booking-date-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 56px;
-  gap: 10px;
-}
-
-.booking-time-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.booking-chip {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 10px 12px;
-  font-weight: 800;
-  text-align: center;
-}
-
-.booking-chip.active {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #111111;
-}
-
-.booking-chip.disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.booking-chip-icon {
-  font-size: 18px;
-  padding: 0;
-}
-
 .booking-hidden-input {
   position: absolute;
   left: -9999px;
   width: 1px;
   height: 1px;
   opacity: 0;
-}
-
-.booking-value {
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--muted);
 }
 
 .booking-card label {

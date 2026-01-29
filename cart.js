@@ -44,14 +44,6 @@
   const bookingToday = document.getElementById("bookingToday");
   const bookingTomorrow = document.getElementById("bookingTomorrow");
   const bookingCalendar = document.getElementById("bookingCalendar");
-  const bookingTimeManual = document.getElementById("bookingTimeManual");
-  const bookingDateValue = document.getElementById("bookingDateValue");
-  const bookingTimeValue = document.getElementById("bookingTimeValue");
-  const bookingModal = document.getElementById("bookingModal");
-  const bookingModalTitle = document.getElementById("bookingModalTitle");
-  const bookingModalInput = document.getElementById("bookingModalInput");
-  const bookingModalCancel = document.getElementById("bookingModalCancel");
-  const bookingModalOk = document.getElementById("bookingModalOk");
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
@@ -202,43 +194,6 @@
       if (el === activeEl) el.classList.add("active");
       else el.classList.remove("active");
     }
-  }
-
-  function updateBookingValueLabels() {
-    if (bookingDateValue) {
-      bookingDateValue.textContent = bookingDate?.value ? bookingDate.value : "Не выбрано";
-    }
-    if (bookingTimeValue) {
-      bookingTimeValue.textContent = bookingTime?.value ? bookingTime.value : "Не выбрано";
-    }
-  }
-
-  function openBookingModal(type) {
-    if (!bookingModal || !bookingModalInput || !bookingModalTitle) return;
-    bookingModal.dataset.type = type;
-    bookingModalTitle.textContent = type === "date" ? "Введите дату (ДД.ММ.ГГГГ)" : "Введите время (ЧЧ:ММ)";
-    bookingModalInput.value = type === "date" ? (bookingDate?.value || "") : (bookingTime?.value || "");
-    bookingModal.classList.remove("hidden");
-    bookingModalInput.focus();
-    bookingModalInput.setSelectionRange(bookingModalInput.value.length, bookingModalInput.value.length);
-  }
-
-  function closeBookingModal() {
-    if (!bookingModal) return;
-    bookingModal.classList.add("hidden");
-  }
-
-  function applyBookingModal() {
-    if (!bookingModal || !bookingModalInput) return;
-    const type = bookingModal.dataset.type;
-    if (type === "date" && bookingDate) {
-      bookingDate.value = formatDate(bookingModalInput.value);
-    }
-    if (type === "time" && bookingTime) {
-      bookingTime.value = formatTime(bookingModalInput.value);
-    }
-    updateBookingValueLabels();
-    closeBookingModal();
   }
 
   function setActiveTab(name) {
@@ -739,7 +694,6 @@
       const d = new Date();
       if (bookingDate) bookingDate.value = formatDateFromDate(d);
       setActiveChip([bookingToday, bookingTomorrow, bookingCalendar], bookingToday);
-      updateBookingValueLabels();
     };
   }
   if (bookingTomorrow) {
@@ -748,28 +702,12 @@
       d.setDate(d.getDate() + 1);
       if (bookingDate) bookingDate.value = formatDateFromDate(d);
       setActiveChip([bookingToday, bookingTomorrow, bookingCalendar], bookingTomorrow);
-      updateBookingValueLabels();
     };
   }
   if (bookingCalendar) {
     bookingCalendar.onclick = () => {
-      openBookingModal("date");
-      setActiveChip([bookingToday, bookingTomorrow, bookingCalendar], bookingCalendar);
+      // no-op placeholder if calendar UI is not used
     };
-  }
-  if (bookingTimeManual) {
-    bookingTimeManual.onclick = () => {
-      openBookingModal("time");
-    };
-  }
-  if (bookingModalCancel) bookingModalCancel.onclick = closeBookingModal;
-  if (bookingModalOk) bookingModalOk.onclick = applyBookingModal;
-  if (bookingModalInput) {
-    bookingModalInput.addEventListener("input", () => {
-      const type = bookingModal?.dataset?.type;
-      if (type === "date") bookingModalInput.value = formatDate(bookingModalInput.value);
-      if (type === "time") bookingModalInput.value = formatTime(bookingModalInput.value);
-    });
   }
 
   // Скрывать клавиатуру при тапе в пустое место
@@ -806,11 +744,13 @@
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
   bindTemplate(timeInput, "__:__");
+  bindTemplate(bookingTime, "__:__");
+  bindTemplate(bookingDate, "__.__.____");
   setActiveTab("menu");
   renderHistory();
   renderCategories();
   renderMenu();
   cartCountEl.textContent = "0";
   totalPriceEl.textContent = "0";
-  updateBookingValueLabels();
+  // init masks for booking date/time
 })();
