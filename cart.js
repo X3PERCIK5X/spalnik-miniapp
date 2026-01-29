@@ -41,9 +41,6 @@
   const bookingComment = document.getElementById("bookingComment");
   const bookingStatus = document.getElementById("bookingStatus");
   const bookingSend = document.getElementById("bookingSend");
-  const bookingToday = document.getElementById("bookingToday");
-  const bookingTomorrow = document.getElementById("bookingTomorrow");
-  const bookingCalendar = document.getElementById("bookingCalendar");
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
@@ -125,18 +122,6 @@
     return `${digits.slice(0, 2)}:${digits.slice(2)}`;
   }
 
-  function formatDateFromDate(d) {
-    const dd = String(d.getDate()).padStart(2, "0");
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    return `${dd}.${mm}.${yyyy}`;
-  }
-
-  function isSameDateStr(dateStr, d) {
-    if (!dateStr) return false;
-    const target = formatDateFromDate(d);
-    return dateStr === target;
-  }
 
   function bindMask(input, formatter) {
     if (!input) return;
@@ -188,13 +173,6 @@
     });
   }
 
-  function setActiveChip(group, activeEl) {
-    for (const el of group) {
-      if (!el) continue;
-      if (el === activeEl) el.classList.add("active");
-      else el.classList.remove("active");
-    }
-  }
 
   function setActiveTab(name) {
     if (!tabMenu || !tabBooking || !menuSection || !bookingSection) return;
@@ -689,26 +667,6 @@
   if (tabMenu) tabMenu.onclick = () => setActiveTab("menu");
   if (tabBooking) tabBooking.onclick = () => setActiveTab("booking");
   if (bookingSend) bookingSend.onclick = sendBooking;
-  if (bookingToday) {
-    bookingToday.onclick = () => {
-      const d = new Date();
-      if (bookingDate) bookingDate.value = formatDateFromDate(d);
-      setActiveChip([bookingToday, bookingTomorrow, bookingCalendar], bookingToday);
-    };
-  }
-  if (bookingTomorrow) {
-    bookingTomorrow.onclick = () => {
-      const d = new Date();
-      d.setDate(d.getDate() + 1);
-      if (bookingDate) bookingDate.value = formatDateFromDate(d);
-      setActiveChip([bookingToday, bookingTomorrow, bookingCalendar], bookingTomorrow);
-    };
-  }
-  if (bookingCalendar) {
-    bookingCalendar.onclick = () => {
-      // no-op placeholder if calendar UI is not used
-    };
-  }
 
   // Скрывать клавиатуру при тапе в пустое место
   document.addEventListener("touchstart", (e) => {
@@ -744,8 +702,8 @@
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
   bindTemplate(timeInput, "__:__");
-  bindTemplate(bookingTime, "__:__");
-  bindTemplate(bookingDate, "__.__.____");
+  bindMask(bookingTime, formatTime);
+  bindMask(bookingDate, formatDate);
   setActiveTab("menu");
   renderHistory();
   renderCategories();
