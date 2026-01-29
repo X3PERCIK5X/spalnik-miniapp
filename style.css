@@ -516,7 +516,8 @@ body {
 }
 
 .booking-block {
-  background: var(--panel);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 12px;
   margin-bottom: 10px;
@@ -543,7 +544,7 @@ body {
 
 .booking-chip {
   border: 1px solid var(--border);
-  background: var(--panel-2);
+  background: var(--panel);
   color: var(--text);
   border-radius: 999px;
   padding: 10px 12px;
