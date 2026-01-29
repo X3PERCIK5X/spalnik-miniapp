@@ -232,6 +232,9 @@
       title.textContent = cat.title;
       section.appendChild(title);
 
+      const grid = document.createElement("div");
+      grid.className = "menu-grid";
+
       for (const it of cat.items) {
         const qty = cart[it.id] || 0;
 
@@ -241,19 +244,26 @@
         const safeDesc = (it.desc || "").trim();
         const safeWeight = (it.weight || "").trim();
 
-        card.innerHTML = `
-          <div class="menu-title">${it.name}</div>
-          ${safeDesc ? `<div class="menu-desc">${safeDesc}</div>` : ""}
-          <div class="menu-bottom">
-            <div>
-              ${safeWeight ? `<div class="menu-weight">${safeWeight}</div>` : `<div class="menu-weight"></div>`}
-              <div class="menu-price">${it.price} ₽</div>
-            </div>
+        const imageUrl = (it.image || it.img || it.photo || "").trim();
 
-            <div class="controls">
-              <button class="btnMinus" type="button">-</button>
-              <span class="qty">${qty}</span>
-              <button class="btnPlus" type="button">+</button>
+        card.innerHTML = `
+          <div class="menu-image">
+            ${imageUrl ? `<img src="${imageUrl}" alt="${it.name}" loading="lazy" />` : `<div class="menu-image-placeholder"></div>`}
+          </div>
+          <div class="menu-content">
+            <div class="menu-title">${it.name}</div>
+            ${safeDesc ? `<div class="menu-desc">${safeDesc}</div>` : ""}
+            <div class="menu-bottom">
+              <div>
+                ${safeWeight ? `<div class="menu-weight">${safeWeight}</div>` : `<div class="menu-weight"></div>`}
+                <div class="menu-price">${it.price} ₽</div>
+              </div>
+
+              <div class="controls">
+                <button class="btnMinus" type="button">-</button>
+                <span class="qty">${qty}</span>
+                <button class="btnPlus" type="button">+</button>
+              </div>
             </div>
           </div>
         `;
@@ -273,9 +283,10 @@
           updateAll();
         };
 
-        section.appendChild(card);
+        grid.appendChild(card);
       }
 
+      section.appendChild(grid);
       menuEl.appendChild(section);
     }
   }
