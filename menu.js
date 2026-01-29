@@ -43,6 +43,8 @@ window.SPALNIK_IMAGES = {
   sauce_blue_cheese: IMG("соус блю чиз.JPG"),
   sauce_sour_cream: IMG("сметана.JPG"),
   jerky_beef_adjika: IMG("вяленое мясо.JPG"),
+  dessert_basque_caramel: IMG("чизкейк.JPG"),
+  dessert_basque_choco: IMG("чизкейк.JPG"),
 };
 
 window.SPALNIK_MENU = [
@@ -234,14 +236,7 @@ window.SPALNIK_MENU = [
         weight: "335 г",
         price: 690,
       },
-      {
-        id: "meat_add_fries_idaho",
-        name: "Добавить картофель фри или айдахо",
-        desc: "",
-        weight: "165 г",
-        price: 190,
-      },
-    ],
+          ],
   },
 
   {
@@ -569,6 +564,8 @@ window.SPALNIK_MENU = [
     id: "dessert",
     title: "ДЕСЕРТ",
     items: [
+      { id: "dessert_basque_caramel", name: "Баскский чизкейк с карамелью", desc: "", weight: "150 г", price: 420 },
+      { id: "dessert_basque_choco", name: "Баскский чизкейк с шоколадом", desc: "", weight: "150 г", price: 420 }
     ],
   },
 
