@@ -385,10 +385,6 @@
   function renderHistory() {
     if (!orderHistoryEl) return;
     const list = loadHistory().slice(0, 10);
-    if (historyButton) {
-      if (list.length) historyButton.classList.remove("hidden");
-      else historyButton.classList.add("hidden");
-    }
     if (!list.length) {
       orderHistoryEl.innerHTML = `<div class="history-title">Пока нет заказов</div>`;
       return;
