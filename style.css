@@ -99,17 +99,21 @@ body {
   color: #111111;
   border: 1px solid #e5e7eb;
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-size: 14px;
   font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
 }
 
 .cart-button span {
-  margin-left: 6px;
+  margin-left: 0;
   background: var(--accent);
   color: #1a1300;
   border-radius: 999px;
-  padding: 2px 7px;
+  padding: 2px 6px;
   font-size: 12px;
   font-weight: 900;
 }
