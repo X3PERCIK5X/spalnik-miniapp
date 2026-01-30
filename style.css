@@ -102,10 +102,12 @@ body {
   padding: 8px 12px;
   font-size: 14px;
   font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .cart-button span {
-  margin-left: 6px;
   background: var(--accent);
   color: #1a1300;
   border-radius: 999px;
@@ -371,6 +373,12 @@ body {
   color: #111111;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   font-weight: 800;
+}
+
+.cart-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
 }
 
 .cart-fab-title {
