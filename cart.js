@@ -241,6 +241,7 @@
     for (const cat of MENU) {
       const section = document.createElement("section");
       section.id = `cat-${cat.id}`;
+      section.dataset.cat = cat.id;
 
       const title = document.createElement("div");
       title.className = "category-title";
@@ -304,6 +305,38 @@
       section.appendChild(grid);
       menuEl.appendChild(section);
     }
+  }
+
+  let categoryObserver = null;
+  function setupCategoryObserver() {
+    if (categoryObserver) {
+      categoryObserver.disconnect();
+      categoryObserver = null;
+    }
+    const sections = Array.from(menuEl.querySelectorAll("section[data-cat]"));
+    if (!sections.length) return;
+
+    categoryObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (!visible.length) return;
+        const top = visible[0].target;
+        const id = top.dataset.cat;
+        if (id && id !== activeCategoryId) {
+          activeCategoryId = id;
+          renderCategories();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-40% 0px -50% 0px",
+        threshold: [0.15, 0.3, 0.6],
+      }
+    );
+
+    sections.forEach((s) => categoryObserver.observe(s));
   }
 
   // ---------- Cart Screen ----------
@@ -709,6 +742,7 @@
   renderHistory();
   renderCategories();
   renderMenu();
+  setupCategoryObserver();
   cartCountEl.textContent = "0";
   totalPriceEl.textContent = "0";
   // init masks for booking date/time
