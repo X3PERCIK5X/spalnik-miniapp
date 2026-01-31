@@ -21,8 +21,9 @@
 
   <div class="topbar-right">
     <button id="historyButton" class="history-button" type="button">Мои заказы</button>
-    <button id="cartButton" class="cart-button" type="button">
-      🧺 <span id="cartCount">0</span>
+    <button id="cartButton" class="cart-button" type="button" aria-label="Корзина">
+      <img src="корзина.png" alt="" class="cart-icon" />
+      <span id="cartCount">0</span>
     </button>
   </div>
   </header>
@@ -135,6 +136,7 @@
 
   <!-- Плавающая корзина -->
   <button id="cartFab" class="cart-fab hidden" type="button">
+    <img src="корзина.png" alt="" class="cart-icon" />
     <span class="cart-fab-title">Корзина</span>
     <span class="cart-fab-dot">·</span>
     <span class="cart-fab-total"><span id="cartFabTotal">0</span> ₽</span>
@@ -156,8 +158,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260128-35"></script>
-  <script defer src="telegram.js?v=20260128-35"></script>
-  <script defer src="cart.js?v=20260128-35"></script>
+  <script defer src="menu.js?v=20260128-36"></script>
+  <script defer src="telegram.js?v=20260128-36"></script>
+  <script defer src="cart.js?v=20260128-36"></script>
 </body>
 </html>

@@ -118,6 +118,13 @@ body {
   font-weight: 900;
 }
 
+.cart-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: inline-block;
+}
+
 .cart-button span {
   margin-left: 6px;
   background: var(--accent);
