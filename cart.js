@@ -307,36 +307,41 @@
     }
   }
 
-  let categoryObserver = null;
-  function setupCategoryObserver() {
-    if (categoryObserver) {
-      categoryObserver.disconnect();
-      categoryObserver = null;
-    }
-    const sections = Array.from(menuEl.querySelectorAll("section[data-cat]"));
-    if (!sections.length) return;
+  let scrollTick = false;
+  function getCategoriesBarBottom() {
+    const bar = document.getElementById("categories");
+    if (!bar) return 0;
+    const r = bar.getBoundingClientRect();
+    return r.bottom;
+  }
 
-    categoryObserver = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (!visible.length) return;
-        const top = visible[0].target;
-        const id = top.dataset.cat;
-        if (id && id !== activeCategoryId) {
-          activeCategoryId = id;
-          renderCategories();
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-40% 0px -50% 0px",
-        threshold: [0.15, 0.3, 0.6],
+  function updateActiveCategoryByScroll() {
+    if (scrollTick) return;
+    scrollTick = true;
+    requestAnimationFrame(() => {
+      scrollTick = false;
+      const sections = Array.from(menuEl.querySelectorAll("section[data-cat]"));
+      if (!sections.length) return;
+      const y = getCategoriesBarBottom() + 4;
+      let current = sections[0];
+      for (let i = 0; i < sections.length; i++) {
+        const top = sections[i].getBoundingClientRect().top;
+        if (top <= y) current = sections[i];
+        else break;
       }
-    );
+      const id = current?.dataset?.cat;
+      if (id && id !== activeCategoryId) {
+        activeCategoryId = id;
+        renderCategories();
+      }
+    });
+  }
 
-    sections.forEach((s) => categoryObserver.observe(s));
+  function setupCategoryObserver() {
+    updateActiveCategoryByScroll();
+    window.removeEventListener("scroll", updateActiveCategoryByScroll);
+    window.addEventListener("scroll", updateActiveCategoryByScroll, { passive: true });
+    window.addEventListener("resize", updateActiveCategoryByScroll);
   }
 
   // ---------- Cart Screen ----------
