@@ -292,8 +292,18 @@ body {
 .menu-bottom {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin-top: auto;
+}
+
+.menu-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controls {
+  align-self: flex-end;
 }
 
 .menu-weight {

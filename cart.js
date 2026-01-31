@@ -269,7 +269,7 @@
             <div class="menu-title">${it.name}</div>
             ${safeDesc ? `<div class="menu-desc">${safeDesc}</div>` : ""}
             <div class="menu-bottom">
-              <div>
+              <div class="menu-meta">
                 ${safeWeight ? `<div class="menu-weight">${safeWeight}</div>` : `<div class="menu-weight"></div>`}
                 <div class="menu-price">${it.price} ₽</div>
               </div>
