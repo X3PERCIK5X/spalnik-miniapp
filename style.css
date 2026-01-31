@@ -299,11 +299,12 @@ body {
 .menu-meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .controls {
   align-self: flex-end;
+  margin-bottom: 2px;
 }
 
 .menu-weight {
