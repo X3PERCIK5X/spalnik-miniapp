@@ -218,21 +218,62 @@
     else cart[itemId] = q;
   }
 
+  let lastStripMoveAt = 0;
+  function scrollActiveCategoryIntoView(behavior = "auto") {
+    if (!categoriesEl) return;
+    const activeEl = categoriesEl.querySelector(".category.active");
+    if (!activeEl) return;
+
+    const containerRect = categoriesEl.getBoundingClientRect();
+    const itemRect = activeEl.getBoundingClientRect();
+    const targetLeft =
+      categoriesEl.scrollLeft +
+      (itemRect.left - containerRect.left) -
+      (containerRect.width / 2 - itemRect.width / 2);
+    const maxLeft = Math.max(0, categoriesEl.scrollWidth - categoriesEl.clientWidth);
+    const nextLeft = Math.max(0, Math.min(maxLeft, targetLeft));
+
+    if (behavior === "smooth") {
+      const now = Date.now();
+      if (now - lastStripMoveAt < 140) return;
+      lastStripMoveAt = now;
+    }
+
+    categoriesEl.scrollTo({ left: nextLeft, behavior });
+  }
+
+  function setActiveCategory(id, behavior = "auto") {
+    if (!id) return;
+    if (id === activeCategoryId) return;
+    activeCategoryId = id;
+    applyActiveCategoryState(behavior);
+  }
+
+  function applyActiveCategoryState(scrollBehavior = "auto") {
+    if (!categoriesEl) return;
+    const items = categoriesEl.querySelectorAll(".category");
+    for (const item of items) {
+      item.classList.toggle("active", item.dataset.catId === activeCategoryId);
+    }
+    scrollActiveCategoryIntoView(scrollBehavior);
+  }
+
   // ---------- Render Categories ----------
-  function renderCategories() {
+  function renderCategories(scrollBehavior = "auto") {
     categoriesEl.innerHTML = "";
     for (const c of MENU) {
       const b = document.createElement("div");
       b.className = "category" + (c.id === activeCategoryId ? " active" : "");
+      b.dataset.catId = c.id;
       b.textContent = c.title;
       b.onclick = () => {
-        activeCategoryId = c.id;
-        renderCategories();
+        setActiveCategory(c.id, "smooth");
         const section = document.getElementById(`cat-${c.id}`);
         if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
       };
       categoriesEl.appendChild(b);
     }
+    scrollActiveCategoryIntoView(scrollBehavior);
   }
 
   // ---------- Render Menu ----------
@@ -308,6 +349,7 @@
   }
 
   let scrollTick = false;
+  let categoryObserver = null;
   function getCategoriesBarBottom() {
     const bar = document.getElementById("categories");
     if (!bar) return 0;
@@ -330,17 +372,66 @@
         else break;
       }
       const id = current?.dataset?.cat;
-      if (id && id !== activeCategoryId) {
-        activeCategoryId = id;
-        renderCategories();
-      }
+      setActiveCategory(id, "smooth");
     });
+  }
+
+  function setupCategoryIntersectionObserver() {
+    if (!("IntersectionObserver" in window)) return;
+    if (categoryObserver) categoryObserver.disconnect();
+
+    const visible = new Map();
+    categoryObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = entry.target?.dataset?.cat;
+          if (!id) continue;
+          if (entry.isIntersecting) visible.set(id, entry.target);
+          else visible.delete(id);
+        }
+
+        if (!visible.size) return;
+
+        let nearest = null;
+        for (const el of visible.values()) {
+          const top = Math.abs(el.getBoundingClientRect().top - getCategoriesBarBottom());
+          if (!nearest || top < nearest.top) nearest = { top, el };
+        }
+        const nextId = nearest?.el?.dataset?.cat;
+        setActiveCategory(nextId, "smooth");
+      },
+      {
+        root: null,
+        rootMargin: "-72px 0px -70% 0px",
+        threshold: [0, 0.05, 0.15, 0.3, 0.5, 0.75, 1],
+      },
+    );
+
+    const sections = Array.from(menuEl.querySelectorAll("section[data-cat]"));
+    for (const section of sections) categoryObserver.observe(section);
   }
 
   function setupCategoryObserver() {
     updateActiveCategoryByScroll();
-    window.removeEventListener("scroll", updateActiveCategoryByScroll);
-    window.addEventListener("scroll", updateActiveCategoryByScroll, { passive: true });
+    const hasIO = "IntersectionObserver" in window;
+    if (hasIO) {
+      setupCategoryIntersectionObserver();
+      window.removeEventListener("scroll", updateActiveCategoryByScroll);
+      document.removeEventListener("scroll", updateActiveCategoryByScroll, true);
+      if (menuSection) menuSection.removeEventListener("scroll", updateActiveCategoryByScroll);
+      document.removeEventListener("touchmove", updateActiveCategoryByScroll, true);
+    } else {
+      window.removeEventListener("scroll", updateActiveCategoryByScroll);
+      window.addEventListener("scroll", updateActiveCategoryByScroll, { passive: true });
+      document.removeEventListener("scroll", updateActiveCategoryByScroll, true);
+      document.addEventListener("scroll", updateActiveCategoryByScroll, { passive: true, capture: true });
+      if (menuSection) {
+        menuSection.removeEventListener("scroll", updateActiveCategoryByScroll);
+        menuSection.addEventListener("scroll", updateActiveCategoryByScroll, { passive: true });
+      }
+      document.removeEventListener("touchmove", updateActiveCategoryByScroll, true);
+      document.addEventListener("touchmove", updateActiveCategoryByScroll, { passive: true, capture: true });
+    }
     window.addEventListener("resize", updateActiveCategoryByScroll);
   }
 
@@ -684,6 +775,7 @@
     totalPriceEl.textContent = String(total);
     renderCategories();
     renderMenu();
+    setupCategoryIntersectionObserver();
 
     if (cartFab && cartFabCount && cartFabTotal) {
       cartFabCount.textContent = String(count);
