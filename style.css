@@ -677,8 +677,7 @@ body {
 }
 
 #bookingSend {
-  position: sticky;
-  bottom: 12px;
+  position: static;
   width: 100%;
   margin-top: 0;
   min-height: 68px;
