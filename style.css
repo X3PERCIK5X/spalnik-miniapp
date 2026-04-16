@@ -544,12 +544,21 @@ body {
   margin-bottom: 10px;
 }
 
-.booking-block {
+.booking-fields {
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 12px;
   margin-bottom: 10px;
+}
+
+.booking-block {
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.booking-block:last-child {
+  margin-bottom: 0;
 }
 
 .booking-label {
