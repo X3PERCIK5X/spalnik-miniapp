@@ -9,7 +9,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="style.css?v=20260416-190609" />
+  <link rel="stylesheet" href="style.css?v=20260416-191125" />
 </head>
 
 <body>
@@ -42,16 +42,6 @@
 
   <!-- Бронь -->
   <section id="bookingSection" class="booking hidden">
-    <div class="booking-hero">
-      <div class="booking-hero-eyebrow">Главное действие</div>
-      <div class="booking-hero-title">Забронируйте стол в пару касаний</div>
-      <div class="booking-hero-text">Меню и предзаказ доступны сразу после брони или в любой момент через вкладку.</div>
-      <div class="booking-hero-actions">
-        <button id="bookingHeroCta" class="send-order" type="button">Забронировать стол</button>
-        <button id="bookingMenuShortcut" class="booking-secondary-btn" type="button">Перейти в меню</button>
-      </div>
-    </div>
-
     <div class="booking-card">
       <div class="booking-title">БРОНИРОВАНИЕ СТОЛА</div>
 
@@ -90,15 +80,6 @@
 
       <div id="bookingStatus" class="booking-status"></div>
       <button id="bookingSend" class="send-order" type="button">Забронировать стол</button>
-
-      <div id="bookingNextActions" class="booking-next-actions hidden">
-        <div class="booking-next-title">Бронь отправлена</div>
-        <div class="booking-next-text">Можно сразу перейти к меню и оформить предзаказ.</div>
-        <div class="booking-next-buttons">
-          <button id="bookingNextMenu" class="booking-secondary-btn" type="button">Посмотреть меню</button>
-          <button id="bookingNextOrder" class="send-order booking-next-order" type="button">Оформить предзаказ</button>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -177,8 +158,8 @@
       __lastTouchEnd = now;
     }, { passive: false });
   </script>
-  <script defer src="menu.js?v=20260416-190609"></script>
-  <script defer src="telegram.js?v=20260416-190609"></script>
-  <script defer src="cart.js?v=20260416-190609"></script>
+  <script defer src="menu.js?v=20260416-191125"></script>
+  <script defer src="telegram.js?v=20260416-191125"></script>
+  <script defer src="cart.js?v=20260416-191125"></script>
 </body>
 </html>

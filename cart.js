@@ -42,11 +42,6 @@
   const bookingComment = document.getElementById("bookingComment");
   const bookingStatus = document.getElementById("bookingStatus");
   const bookingSend = document.getElementById("bookingSend");
-  const bookingHeroCta = document.getElementById("bookingHeroCta");
-  const bookingMenuShortcut = document.getElementById("bookingMenuShortcut");
-  const bookingNextActions = document.getElementById("bookingNextActions");
-  const bookingNextMenu = document.getElementById("bookingNextMenu");
-  const bookingNextOrder = document.getElementById("bookingNextOrder");
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
@@ -107,16 +102,6 @@
   }
   function setBookingStatus(msg) {
     if (bookingStatus) bookingStatus.textContent = msg || "";
-  }
-
-  function openMenuFromBooking() {
-    setActiveTab("menu");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function focusBookingForm() {
-    if (bookingDate) bookingDate.focus();
-    if (bookingSection) bookingSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function formatTime(value) {
@@ -753,7 +738,6 @@
     };
 
     if (!payload.name || !payload.phone || !payload.date || !payload.time || !payload.guests) {
-      if (bookingNextActions) bookingNextActions.classList.add("hidden");
       setBookingStatus("❌ Заполни имя, телефон, дату, время и гостей.");
       return;
     }
@@ -768,7 +752,6 @@
     const minutes = h * 60 + m;
     const isValidRange = (minutes >= 13 * 60 && minutes <= 23 * 60 + 59) || minutes === 0;
     if (!isValidRange) {
-      if (bookingNextActions) bookingNextActions.classList.add("hidden");
       setBookingStatus("❌ Бронь доступна с 13:00 до 00:00.");
       return;
     }
@@ -782,7 +765,6 @@
 
     setBookingStatus("✅ Бронь отправлена. Мы свяжемся с вами.");
     saveProfile(payload.name, payload.phone);
-    if (bookingNextActions) bookingNextActions.classList.remove("hidden");
   }
 
   // ---------- UI updates ----------
@@ -816,10 +798,6 @@
   if (tabMenu) tabMenu.onclick = () => setActiveTab("menu");
   if (tabBooking) tabBooking.onclick = () => setActiveTab("booking");
   if (bookingSend) bookingSend.onclick = sendBooking;
-  if (bookingHeroCta) bookingHeroCta.onclick = focusBookingForm;
-  if (bookingMenuShortcut) bookingMenuShortcut.onclick = openMenuFromBooking;
-  if (bookingNextMenu) bookingNextMenu.onclick = openMenuFromBooking;
-  if (bookingNextOrder) bookingNextOrder.onclick = openMenuFromBooking;
 
   // Скрывать клавиатуру при тапе в пустое место
   document.addEventListener("touchstart", (e) => {
