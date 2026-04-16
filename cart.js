@@ -39,9 +39,16 @@
   const bookingDate = document.getElementById("bookingDate");
   const bookingTime = document.getElementById("bookingTime");
   const bookingGuests = document.getElementById("bookingGuests");
+  const bookingGuestsMinus = document.getElementById("bookingGuestsMinus");
+  const bookingGuestsPlus = document.getElementById("bookingGuestsPlus");
   const bookingComment = document.getElementById("bookingComment");
   const bookingStatus = document.getElementById("bookingStatus");
   const bookingSend = document.getElementById("bookingSend");
+  const bookingMenuLink = document.getElementById("bookingMenuLink");
+  const bookingSuccess = document.getElementById("bookingSuccess");
+  const bookingSuccessMenu = document.getElementById("bookingSuccessMenu");
+  const bookingDateChips = Array.from(document.querySelectorAll("[data-booking-date]"));
+  const bookingTimeChips = Array.from(document.querySelectorAll("[data-booking-time]"));
 
   const totalPriceEl = document.getElementById("totalPrice");
   const sendOrderBtn = document.getElementById("sendOrder");
@@ -102,6 +109,66 @@
   }
   function setBookingStatus(msg) {
     if (bookingStatus) bookingStatus.textContent = msg || "";
+  }
+
+  function setBookingSuccessVisible(visible) {
+    if (!bookingSuccess) return;
+    bookingSuccess.classList.toggle("hidden", !visible);
+  }
+
+  function openMenuFromBooking() {
+    setActiveTab("menu");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function formatDateForBooking(date) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = String(date.getFullYear());
+    return `${dd}.${mm}.${yyyy}`;
+  }
+
+  function getBookingShortcutDate(kind) {
+    const date = new Date();
+    date.setHours(12, 0, 0, 0);
+    if (kind === "tomorrow") date.setDate(date.getDate() + 1);
+    if (kind === "next") date.setDate(date.getDate() + 2);
+    return formatDateForBooking(date);
+  }
+
+  function updateBookingDateChipLabels() {
+    const nextChip = bookingDateChips.find((chip) => chip.dataset.bookingDate === "next");
+    if (!nextChip) return;
+    const labels = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    const date = new Date();
+    date.setDate(date.getDate() + 2);
+    nextChip.textContent = labels[date.getDay()];
+  }
+
+  function updateBookingCtaState() {
+    if (!bookingSend) return;
+    const ready =
+      Boolean(bookingName?.value.trim()) &&
+      Boolean(bookingPhone?.value.trim()) &&
+      Boolean(bookingDate?.value.trim()) &&
+      Boolean(bookingTime?.value.trim()) &&
+      Boolean(bookingGuests?.value.trim());
+    bookingSend.disabled = !ready;
+  }
+
+  function setBookingLoading(loading) {
+    if (!bookingSend) return;
+    bookingSend.disabled = loading || bookingSend.disabled;
+    bookingSend.textContent = loading ? "Отправляем..." : "Забронировать стол";
+  }
+
+  function changeBookingGuests(delta) {
+    if (!bookingGuests) return;
+    const current = parseInt(bookingGuests.value || "0", 10) || 0;
+    const next = Math.max(1, Math.min(50, current + delta));
+    bookingGuests.value = String(next);
+    updateBookingCtaState();
+    setBookingSuccessVisible(false);
   }
 
   function formatTime(value) {
@@ -738,6 +805,8 @@
     };
 
     if (!payload.name || !payload.phone || !payload.date || !payload.time || !payload.guests) {
+      updateBookingCtaState();
+      setBookingSuccessVisible(false);
       setBookingStatus("❌ Заполни имя, телефон, дату, время и гостей.");
       return;
     }
@@ -752,19 +821,27 @@
     const minutes = h * 60 + m;
     const isValidRange = (minutes >= 13 * 60 && minutes <= 23 * 60 + 59) || minutes === 0;
     if (!isValidRange) {
+      setBookingSuccessVisible(false);
       setBookingStatus("❌ Бронь доступна с 13:00 до 00:00.");
       return;
     }
 
     setBookingStatus("⏳ Отправляю бронь...");
+    setBookingLoading(true);
     const res = await TG.sendOrderViaApi(payload);
     if (!res.ok) {
+      setBookingLoading(false);
+      updateBookingCtaState();
+      setBookingSuccessVisible(false);
       setBookingStatus("❌ Не удалось отправить бронь.");
       return;
     }
 
     setBookingStatus("✅ Бронь отправлена. Мы свяжемся с вами.");
     saveProfile(payload.name, payload.phone);
+    setBookingLoading(false);
+    updateBookingCtaState();
+    setBookingSuccessVisible(true);
   }
 
   // ---------- UI updates ----------
@@ -798,6 +875,26 @@
   if (tabMenu) tabMenu.onclick = () => setActiveTab("menu");
   if (tabBooking) tabBooking.onclick = () => setActiveTab("booking");
   if (bookingSend) bookingSend.onclick = sendBooking;
+  if (bookingMenuLink) bookingMenuLink.onclick = openMenuFromBooking;
+  if (bookingSuccessMenu) bookingSuccessMenu.onclick = openMenuFromBooking;
+  if (bookingGuestsMinus) bookingGuestsMinus.onclick = () => changeBookingGuests(-1);
+  if (bookingGuestsPlus) bookingGuestsPlus.onclick = () => changeBookingGuests(1);
+  for (const chip of bookingDateChips) {
+    chip.onclick = () => {
+      if (!bookingDate) return;
+      bookingDate.value = getBookingShortcutDate(chip.dataset.bookingDate || "today");
+      updateBookingCtaState();
+      setBookingSuccessVisible(false);
+    };
+  }
+  for (const chip of bookingTimeChips) {
+    chip.onclick = () => {
+      if (!bookingTime) return;
+      bookingTime.value = chip.dataset.bookingTime || "";
+      updateBookingCtaState();
+      setBookingSuccessVisible(false);
+    };
+  }
 
   // Скрывать клавиатуру при тапе в пустое место
   document.addEventListener("touchstart", (e) => {
@@ -832,9 +929,19 @@
     const savedPhone = localStorage.getItem("spalnik_phone") || "";
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
+  for (const input of [bookingName, bookingPhone, bookingDate, bookingTime, bookingGuests, bookingComment]) {
+    if (!input) continue;
+    input.addEventListener("input", () => {
+      updateBookingCtaState();
+      setBookingSuccessVisible(false);
+    });
+  }
   bindTemplate(timeInput, "__:__");
   bindMask(bookingTime, formatTime);
   bindMask(bookingDate, formatDate);
+  updateBookingDateChipLabels();
+  updateBookingCtaState();
+  setBookingSuccessVisible(false);
   setActiveTab("booking");
   renderHistory();
   renderCategories();
