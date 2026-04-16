@@ -835,7 +835,7 @@
   bindTemplate(timeInput, "__:__");
   bindMask(bookingTime, formatTime);
   bindMask(bookingDate, formatDate);
-  setActiveTab("menu");
+  setActiveTab("booking");
   renderHistory();
   renderCategories();
   renderMenu();
