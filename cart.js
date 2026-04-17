@@ -929,6 +929,9 @@
     const savedPhone = localStorage.getItem("spalnik_phone") || "";
     if (!bookingPhone.value) bookingPhone.value = savedPhone;
   }
+  if (bookingGuests && !bookingGuests.value) {
+    bookingGuests.value = "2";
+  }
   for (const input of [bookingName, bookingPhone, bookingDate, bookingTime, bookingGuests, bookingComment]) {
     if (!input) continue;
     input.addEventListener("input", () => {
